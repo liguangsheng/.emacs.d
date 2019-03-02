@@ -1,0 +1,41 @@
+#+TITLE: emacsd
+#+AUTHOR: liguangsheng
+#+STARTUP: showall
+
+My emacs configuration.
+
+* Install emacs
+** windows
+  see https://www.gnu.org/savannah-checkouts/gnu/emacs/download.html
+** mac os
+   #+BEGIN_SRC sh
+   brew install --HEAD emacs-plus --with-emacs-27-branch --with-jansson --without-spacemacs-icon
+   #+END_SRC
+
+* Install dependencies
+** Ripgrep
+   #+BEGIN_SRC sh
+   scoop install ripgrep # windows
+   #+END_SRC
+   
+** The Silver Searcher
+   #+BEGIN_SRC sh
+   scoop install ag # windows
+   #+END_SRC
+
+** Golang
+   #+BEGIN_SRC 
+   go get -u -v golang.org/x/tools/gopls@latest
+   go get -u -v github.com/sqs/goreturns
+   #+END_SRC
+
+** Rust
+   #+BEGIN_SRC 
+   rustup component add rust-src
+   #+END_SRC
+
+** Python 
+   #+BEGIN_SRC 
+   pip3 install python-language-server[all]
+   #+END_SRC
+   
