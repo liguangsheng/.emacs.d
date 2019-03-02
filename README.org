@@ -1,0 +1,64 @@
+#+TITLE: emacsd
+#+AUTHOR: liguangsheng
+#+STARTUP: showall
+
+My emacs configuration.
+
+* Install
+** windows
+  see https://www.gnu.org/savannah-checkouts/gnu/emacs/download.html
+** mac os
+   #+BEGIN_SRC sh
+   brew install --HEAD emacs-plus --with-emacs-27-branch --with-jansson --without-spacemacs-icon
+   #+END_SRC
+
+* Install dependencies
+** Ripgrep
+   #+BEGIN_SRC sh
+   scoop install ripgrep
+   #+END_SRC
+   
+** The Silver Searcher
+   #+BEGIN_SRC sh
+   scoop install ag
+   #+END_SRC
+
+** Golang
+   #+BEGIN_SRC 
+   go get -u -v golang.org/x/tools/gopls@latest
+   go get -u -v github.com/sqs/goreturns
+   #+END_SRC
+
+** Rust
+   #+BEGIN_SRC 
+   rustup component add rust-src
+   #+END_SRC
+
+** Python 
+   #+BEGIN_SRC 
+   pip3 install python-language-server[all]
+   #+END_SRC
+   
+* Server
+
+** Win10
+*** 启动server
+     (推荐)在配置中添加~(server-start)~
+    - 直接使用~emacs,exe --daemon~启动
+
+*** 启动emacsclient
+#+BEGIN_SRC 
+# open in exists emacs frame
+emacsclient.exe --server-file $HOME\.emacs.d\.cache\server\server $args
+#+END_SRC
+
+#+BEGIN_SRC 
+# open in new frame
+emacsclient.exe --server-file $HOME\.emacs.d\.cache\server\server -c $args
+#+END_SRC
+
+推荐在powershell的profile中添加alias
+#+BEGIN_SRC 
+function e {emacsclientw.exe --server-file $HOME\.emacs.d\.cache\server\server $args}
+function ec {emacsclientw.exe --server-file $HOME\.emacs.d\.cache\server\server -c $args}
+#+END_SRC
