@@ -1,0 +1,5 @@
+# -*- coding: utf-8 -*-
+# name: vdate
+# key: vdate
+# --
+`(format-time-string "%Y-%m-%d")`$0

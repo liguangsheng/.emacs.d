@@ -1,0 +1,9 @@
+#name: head
+# --
+#+TITLE: $1
+#+AUTHOR: Li Guangsheng
+#+DATE: `(format-time-string "%Y-%m-%d %H:%M:%S" (current-time))`
+#+EMAIL: 670118818@qq.com
+#+STARTUP: indent showall
+
+$2

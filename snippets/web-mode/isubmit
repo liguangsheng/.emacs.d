@@ -1,0 +1,4 @@
+# name: isubmit
+# key: isubmit
+# --
+<input type="submit" name="$1" value="$2">

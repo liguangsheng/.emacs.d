@@ -1,0 +1,4 @@
+# name: ipasswd
+# key: ipasswd
+# --
+<input type="password" name="$1">

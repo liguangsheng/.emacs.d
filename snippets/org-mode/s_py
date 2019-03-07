@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: s_py
+# key: s_py
+# --
+#+BEGIN_SRC python :exports both :results output :session
+$1
+#+END_SRC

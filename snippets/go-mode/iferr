@@ -1,0 +1,6 @@
+# name: iferr
+# key: iferr 
+# --
+if err != nil {
+   $0
+}

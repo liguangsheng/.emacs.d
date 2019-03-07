@@ -1,0 +1,4 @@
+# name: itext
+# key: itext
+# --
+<input type="text" name="$1" value="$2">
