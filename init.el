@@ -59,6 +59,7 @@
 (require 'init-straight)
 (require 'init-font)
 (require 'init-evil)
+(require 'init-misc)
 (require 'init-editing)
 (require 'init-font)
 (require 'init-theme)
