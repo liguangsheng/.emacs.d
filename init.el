@@ -3,12 +3,6 @@
 
 ;; This file bootstraps the configuration, which is divided into
 ;; a number of other files.
-;;
-;; all-the-icons requirements:
-;; M-x all-the-icons-install-fonts
-;; 
-;; tabnine requirements:
-;; M-x company-tabnine-install-binary
 
 ;;; Code:
 
@@ -24,7 +18,7 @@
  ;; 启动时窗口最大化
  maximize-frame-at-start-p t
  ;; 是否启用光标闪烁
- blink-cursor-p t
+ blink-cursor-p nil
  ;; 平滑滚动
  smooth-scrolling-p t
  ;; 中英文字体
@@ -32,12 +26,8 @@
  ;; curl -L https://github.com/hbin/top-programming-fonts/raw/master/install.sh | bash
  en-fonts '("Fira Mono for Powerline" 13 "Source Code Pro" 13 "Courier New" 13)
  cn-fonts '("华文细黑" 16 "宋体" 15 "微软雅黑" 15)
- ;; 默认主题，如果是列表，则随机选择一项加载
+ ;; 默认主题
  theme 'doom-one
- ;; python
- python-shell-interpreter "/usr/local/bin/python3"
- ;; 是否使用lsp作为python补全后端
- python-lsp-p t
  ;; 是否启动emacs server
  server-p t
  server-socket-dir "/tmp/emacs-server/"
@@ -77,45 +67,19 @@
 
 ;; lang
 (require 'init-org)
+(require 'init-markdown)
 (require 'init-protocol)
 (require 'init-go)
+(require 'init-lua)
 (require 'init-typescript)
+(require 'init-bazel)
 
-;; ;; minor mode & utils
-;; (require 'init-server)
-;; (require 'init-misc)
-;; (require 'init-dashboard)
-;; (require 'init-file-manager)
-;; (require 'init-prettify)
-;; (require 'init-tags)
-;; (require 'init-lsp)
-;; (require 'init-restart)
-;; (require 'init-highlight)
-;; (require 'init-pairs)
-;; (require 'init-git)
-;; (require 'init-smooth-scrolling)
-;; (require 'init-linum)
-;; (require 'init-quickrun)
-;; (require 'init-project)
-;; (require 'init-flycheck)
-;; (require 'init-completion)
-
-;; ;; programing mode
 ;; (require 'init-cc)
-;; (require 'init-shell)
-;; (require 'init-markdown)
-;; (require 'init-protobuf)
 ;; (require 'init-python)
 ;; (require 'init-ruby)
-;; (require 'init-go)
-;; (require 'init-lua)
 ;; (require 'init-web)
-;; (require 'init-lisp)
 ;; (require 'init-javascript)
-;; (require 'init-yaml)
-;; (require 'init-org)
 ;; (require 'init-haskell)
-;; (require 'init-bazel)
 ;; (require 'init-rust)
 
 ;;; init.el ends here
