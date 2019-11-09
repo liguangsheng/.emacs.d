@@ -28,6 +28,7 @@
     "ee" 'er/mark-email
     "ea" 'er/mark-text-paragraph
     "ev" 'er/expand-region
+    "v" 'er/expand-region
     ))
 
 ;; 跳转

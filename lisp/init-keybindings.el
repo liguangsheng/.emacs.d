@@ -4,6 +4,10 @@
   (interactive)
   (find-file "~/.emacs.d/init.el"))
 
+(defun switch-to-scratch ()
+  (interactive)
+  (switch-to-buffer "*scratch*"))
+
 
 (use-package which-key
   :init
