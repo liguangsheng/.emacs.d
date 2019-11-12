@@ -51,9 +51,9 @@
 (require 'init-evil)
 (require 'init-misc)
 (require 'init-editing)
-(require 'init-font)
-(require 'init-theme)
 (require 'init-helm)
+(require 'init-theme)
+(require 'init-font)
 (require 'init-highlight)
 (require 'init-shell)
 (require 'init-modeline)
@@ -73,13 +73,5 @@
 (require 'init-lua)
 (require 'init-typescript)
 (require 'init-bazel)
-
-;; (require 'init-cc)
-;; (require 'init-python)
-;; (require 'init-ruby)
-;; (require 'init-web)
-;; (require 'init-javascript)
-;; (require 'init-haskell)
-;; (require 'init-rust)
 
 ;;; init.el ends here
