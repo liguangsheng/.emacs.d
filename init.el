@@ -70,6 +70,7 @@
 (require 'init-markdown)
 (require 'init-protocol)
 (require 'init-go)
+(require 'init-rust)
 (require 'init-lua)
 (require 'init-typescript)
 (require 'init-bazel)
