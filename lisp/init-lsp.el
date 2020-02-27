@@ -44,10 +44,6 @@
   ;; python-mode
   (add-hook 'python-mode 'lsp)
   (setq lsp-clients-python-library-directories '("/usr/local/" "/usr/"))
-
-
-  ;; rust-mode
-  (add-hook 'rust-mode-hook #'lsp-rust-enable)
   )
 
 
