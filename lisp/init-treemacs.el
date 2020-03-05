@@ -15,6 +15,7 @@
     "tr" 'treemacs
     "tt" 'treemacs-switch-window
     "tw" 'treemacs-switch-workspace
+    "tp" 'treemacs-add-and-display-current-project
     ))
 
 ;;; helm-treemacs
