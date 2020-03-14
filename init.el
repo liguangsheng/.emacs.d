@@ -7,104 +7,69 @@
 ;;; Code:
 
 (setq-default
- ;; 是否显示菜单栏
- show-menu-bar-p t
- ;; 是否显示工具栏
- show-tool-bar-p nil
  ;; 显示行号
- show-line-number-p nil
- ;; 滚动条
- show-scroll-bar-p nil
+ show-line-number-p t
  ;; 启动时窗口最大化
  maximize-frame-at-start-p t
- ;; 是否启用光标闪烁
- blink-cursor-p nil
  ;; 平滑滚动
  smooth-scrolling-p t
+ ;; 自动重新加载被修改过的文件
+ auto-revert-p t
  ;; 中英文字体
  ;; https://github.com/powerline/fonts
  ;; curl -L https://github.com/hbin/top-programming-fonts/raw/master/install.sh | bash
  en-fonts '("Fira Mono for Powerline" 13 "Source Code Pro" 13 "Courier New" 13)
  cn-fonts '("华文细黑" 16 "宋体" 15 "微软雅黑" 15)
- ;; 默认主题
- theme 'doom-one
+ ;; 使用主题
+ theme 'doom-one-light
  ;; 是否启动emacs server
  server-p t
  server-socket-dir "/tmp/emacs-server/"
  server-name "emacs-server"
  )
 
-;; 不同平台差异化配置
-(if (eq system-type 'windows-nt)
-    (setq-default
-     en-fonts '("Source Code Pro" 13 "Courier New" 13)
-     cn-fonts '("华文细黑" 16 "宋体" 15 "微软雅黑" 15)
-     server-p nil
-     maximize-frame-at-start-p nil
-     ))
-
-;; core
-;; (require 'init-core (concat user-emacs-directory "lisp/init-core"))
+;;; ----------------------------------------------------------------------------
+;;; Core
+(require 'cl-lib)
 
 (defvar emacs-root-dir (file-truename user-emacs-directory)
-  "Path to .emacs.d directory")
-
-(defvar emacs-module-dir  (expand-file-name "modules/" emacs-root-dir)
-  "Path to .emacs.d/lisp directory where init files exists.")
+  "Path to .emacs.d directory.")
 
 (defvar emacs-lisp-dir  (expand-file-name "lisp/" emacs-root-dir)
   "Path to .emacs.d/lisp directory where init files exists.")
 
-(defvar emacs-lisp-lang-dir  (expand-file-name "lisp/lang/" emacs-root-dir)
-  "Path to .emacs.d/lisp/lang directory")
-
 (defvar emacs-site-lisp-dir (expand-file-name "site-lisp/" emacs-root-dir)
   "Path to .emacs.d/site-lisp directory.")
 
-(defvar emacs-cache-dir (expand-file-name ".cache/" emacs-root-dir)
-  "Path to cache directory.")
-
-(defvar emacs-etc-dir (expand-file-name "etc/" emacs-root-dir)
-  "Path to etc directory.")
-
-(defun ensure-dir (DIR)
-  (if (not (file-exists-p DIR)) (make-directory DIR)))
-
-(ensure-dir emacs-cache-dir)
-(ensure-dir emacs-etc-dir)
-
-;; add lisp and core dir to load-path
+;; Add lisp and core dir to load-path
 (add-to-list 'load-path emacs-lisp-dir)
-(add-to-list 'load-path emacs-lisp-lang-dir)
 
-
-;; add site-lisp to load-path
+;; Add site-lisp to load-path
 (let ((default-directory emacs-site-lisp-dir))
   (normal-top-level-add-subdirs-to-load-path))
 
-(require 'cl-lib)
+(defalias 'yes-or-no-p 'y-or-n-p) ;; use y/n insteal of yes/no
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(horizontal-scroll-bar-mode -1)
+(global-auto-revert-mode 1)
+(recentf-mode 1)
+(ignore-errors (savehist-mode 1))
+(save-place-mode 1)
+(show-paren-mode 1)
+(delete-selection-mode 1)
+(setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
+(electric-pair-mode 1)
 
-(defvar show-menu-bar-p nil
-  "Show menu bar when show-menu-bar-p is t.")
-(if show-menu-bar-p (menu-bar-mode 1) (menu-bar-mode -1))
+;; Show line number
+(when show-line-number-p
+  (if (fboundp 'display-line-numbers-mode)
+      (global-display-line-numbers-mode 1)
+    (global-linum-mode 1)))
 
-(defvar show-tool-bar-p nil "show tool bar when show-tool-bar-p is t")
-(if show-tool-bar-p (tool-bar-mode 1) (tool-bar-mode 0))
-
-(defvar blink-cursor-p nil "blink cursor when blink-cursor-p is t")
-(if blink-cursor-p (blink-cursor-mode 1) (blink-cursor-mode 0))
-
-(defvar show-scroll-bar-p nil "show scroll bar when show-scroll-bar-p is t")
-(if (and (display-graphic-p) show-scroll-bar-p) (scroll-bar-mode 1) (scroll-bar-mode 0))
-
-(defvar maximize-frame-at-start-p t "maximize-frame-at-start-p")
+;; Maximize frame at start
+(defvar maximize-frame-at-start-p t "Maximize-frame-at-start-p.")
 (when maximize-frame-at-start-p (add-to-list 'initial-frame-alist '(fullscreen . maximized)))
-
-(defvar show-line-number-p nil "show line number")
-(when show-line-number-p (linum-mode))
-
-;; use y/n insteal of yes/no
-(defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; Use utf-8 as default coding system.
 (when (fboundp 'set-charset-priority)
@@ -117,51 +82,35 @@
 (setq-default buffer-file-coding-system 'utf-8)  ; with sugar on top
 
 ;; Better variables
-(setq vc-follow-symlinks t)
-(setq apropos                      t
-      comint-prompt-read-only      t
-      compilation-always-kill      t
-      compilation-ask-about-save   nil
-      compilation-scroll-output    t
-      debug-on-error               t
-      gc-cons-threshold            50000000
-      history-length               1000
-      idle-update-delay            2
-      large-file-warning-threshold 100000000
-      visible-bell                 0
-      ;; backup
-      backup-by-copying            t
-      delete-old-versions          t
-      kept-new-versions            6
-      kept-old-versions            2
-      version-control              t
-      ;; files
-      auto-save-list-file-name     (concat emacs-cache-dir "autosave/")
-      backup-directory-alist       `(("." . ,(concat emacs-cache-dir "backups")))
-      nsm-settings-file            (concat emacs-cache-dir "network-security.data")
-      recentf-save-file            (concat emacs-cache-dir "recentf")
-      server-auth-dir              (concat emacs-cache-dir "server/")
-      tramp-auto-save-directory    (concat emacs-cache-dir "tramp-auto-save/")
-      tramp-backup-directory-alist backup-directory-alist
-      tramp-persistency-file-name  (concat emacs-cache-dir "tramp-persistency.el")
-      )
+(setq
+ apropos                      t
+ backup-by-copying            t
+ comint-prompt-read-only      t
+ compilation-always-kill      t
+ compilation-ask-about-save   nil
+ compilation-scroll-output    t
+ debug-on-error               t
+ delete-old-versions          t
+ gc-cons-threshold            2147483648 ; 2GB
+ history-length               1024
+ idle-update-delay            0.5
+ inhibit-startup-message      t
+ kept-new-versions            6
+ kept-old-versions            2
+ large-file-warning-threshold 100000000
+ vc-follow-symlinks           t
+ version-control              t
+ visible-bell                 0
+ )
 
-;; 将custom.el移到etc目录
-(setq custom-file (concat emacs-etc-dir "custom.el"))
-(when (file-exists-p custom-file)
-  (load custom-file t t))
-
-;; 去除启动画面
-(setq inhibit-startup-message t)
-
-;; 自动重新加载buffer
-(auto-revert-mode)
+;;; ----------------------------------------------------------------------------
+;;; Package Manage(straight)
 
 (require 'package)
-
 (defvar bootstrap-version)
 (let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+       (expand-file-name "straight/repos/straight.el/bootstrap.el"
+			 user-emacs-directory))
       (bootstrap-version 5))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
@@ -175,58 +124,53 @@
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
+;;; ----------------------------------------------------------------------------
+;;; Init Font
 (defvar en-fonts '("Source Code Pro" 13 "Courier New" 13))
 (defvar cn-fonts '("宋体" 15 "微软雅黑" 15))
 
-(defun core-font/exists-p (font-name)
+(defun init/exists-p (font-name)
   "检查字体是否存在."
   (if (null (x-list-fonts font-name)) nil t))
 
-(defun core-font/use-en (font-name font-size)
+(defun init/use-en (font-name font-size)
   "设置英文字体."
   (set-face-attribute 'default nil
 		      :font (format "%s:pixelsize=%d" font-name font-size)
 		      :weight 'normal))
 
-(defun core-font/use-cn (font-name font-size)
+(defun init/use-cn (font-name font-size)
   "设置中文字体."
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
     (set-fontset-font (frame-parameter nil 'font) charset
 		      (font-spec :family font-name :size font-size))))
 
-(defun core-font/use-list (font-list font-func)
+(defun init/use-list (font-list font-func)
   "设置字体列表，从列表头开始查找存在的字体并使用该字体."
   (unless (null font-list)
     (let ((font-name (car font-list))
 	  (font-size (cadr font-list)))
-      (if (core-font/exists-p font-name)
+      (if (init/exists-p font-name)
 	  (funcall font-func font-name font-size)
-	(core-font/use-list (cddr font-list) font-func)))))
+	(init/use-list (cddr font-list) font-func)))))
 
-(defun core-font/use-en-list (font-list)
-  (core-font/use-list font-list 'core-font/use-en))
+(defun init/use-en-list (font-list)
+  (init/use-list font-list 'init/use-en))
 
-(defun core-font/use-cn-list (font-list)
-  (core-font/use-list font-list 'core-font/use-cn))
+(defun init/use-cn-list (font-list)
+  (init/use-list font-list 'init/use-cn))
 
 
-(defun core-font/init ()
+(defun init-font ()
   (when (display-graphic-p)
-    (core-font/use-en-list en-fonts)
-    (core-font/use-cn-list cn-fonts)))
+    (init/use-en-list en-fonts)
+    (init/use-cn-list cn-fonts)))
 
-(core-font/init)
+(init-font)
 
+;;; ----------------------------------------------------------------------------
+;;; Init Packages
 (use-package evil
-  :init
-  ;; (setq evil-default-cursor        '("#0eadee" box)
-  ;; 	evil-normal-state-cursor   '("#0eadee" box)
-  ;; 	evil-insert-state-cursor   '("#00cd66" bar)
-  ;; 	evil-visual-state-cursor   '("#bebebe" hbar)
-  ;; 	evil-replace-state-cursor  '("#0eadee" box)
-  ;; 	evil-operator-state-cursor '("#9966cc" box)
-  ;; 	evil-motion-state-cursor   '("#d32f2f" box)
-  ;; 	evil-emacs-state-cursor    '("#373e40" box))
   :config
   (evil-ex-define-cmd "q" 'kill-this-buffer) ;; make :q just kill buffer, do not exit emacs
   (evil-ex-define-cmd "quit" 'evil-quit)
@@ -242,9 +186,6 @@
   :config
   (evil-leader/set-key "qr" 'restart-emacs))
 
-(defun kill-all-buffers ()
-  (interactive)
-  (kill-buffers nil))
 
 ;; 智能括号
 (defvar smartparens-p nil)
@@ -287,24 +228,6 @@
     "l" 'avy-goto-line
     ))
 
-;; 切换到修改过但没保存的的buffer
-(defun switch-to-modified-buffer ()
-  (interactive)
-  (let ((buf-list (seq-filter (lambda (x)
-				(not
-				 (or
-				  (not (buffer-modified-p x))
-				  (s-prefix? "*" (buffer-name x))
-				  (s-prefix? " *" (buffer-name x))
-				  (s-suffix? "-mode" (buffer-name x)))))
-			      (buffer-list))))
-    (if buf-list
-	(switch-to-buffer (first buf-list))
-      (message "No buffer modified."))))
-
-(evil-leader/set-key
-  "bm" 'switch-to-modified-buffer)
-
 ;; helm
 (use-package helm
   :bind ("M-x" . 'helm-M-x)
@@ -332,7 +255,11 @@
 (use-package dracula-theme :defer t)
 (use-package doom-themes :defer t)
 
-(load-theme theme t)
+(defvar theme nil)
+(when theme
+  (message (format "load theme %s" (symbol-name theme)))
+  (load-theme theme t)
+  )
 
 ;; 彩虹分隔符
 (use-package rainbow-delimiters
@@ -366,49 +293,49 @@
   :ensure nil
   :hook (after-init . show-paren-mode)
   :init (setq show-paren-when-point-inside-paren t
-              show-paren-when-point-in-periphery t)
+	      show-paren-when-point-in-periphery t)
   :config
   (with-no-warnings
     (defun display-line-overlay (pos str &optional face)
       "Display line at POS as STR with FACE.
 FACE defaults to inheriting from default and highlight."
       (let ((ol (save-excursion
-                  (goto-char pos)
-                  (make-overlay (line-beginning-position)
-                                (line-end-position)))))
-        (overlay-put ol 'display str)
-        (overlay-put ol 'face
-                     (or face '(:inherit highlight)))
-        ol))
+		  (goto-char pos)
+		  (make-overlay (line-beginning-position)
+				(line-end-position)))))
+	(overlay-put ol 'display str)
+	(overlay-put ol 'face
+		     (or face '(:inherit highlight)))
+	ol))
 
     (defvar-local show-paren--off-screen-overlay nil)
     (defun show-paren-off-screen (&rest _args)
       "Display matching line for off-screen paren."
       (when (overlayp show-paren--off-screen-overlay)
-        (delete-overlay show-paren--off-screen-overlay))
+	(delete-overlay show-paren--off-screen-overlay))
       ;; check if it's appropriate to show match info,
       (when (and (overlay-buffer show-paren--overlay)
-                 (not (or cursor-in-echo-area
-                          executing-kbd-macro
-                          noninteractive
-                          (minibufferp)
-                          this-command))
-                 (and (not (bobp))
-                      (memq (char-syntax (char-before)) '(?\) ?\$)))
-                 (= 1 (logand 1 (- (point)
-                                   (save-excursion
-                                     (forward-char -1)
-                                     (skip-syntax-backward "/\\")
-                                     (point))))))
-        ;; rebind `minibuffer-message' called by
-        ;; `blink-matching-open' to handle the overlay display
-        (cl-letf (((symbol-function #'minibuffer-message)
-                   (lambda (msg &rest args)
-                     (let ((msg (apply #'format-message msg args)))
-                       (setq show-paren--off-screen-overlay
-                             (display-line-overlay
-                              (window-start) msg ))))))
-          (blink-matching-open))))
+		 (not (or cursor-in-echo-area
+			  executing-kbd-macro
+			  noninteractive
+			  (minibufferp)
+			  this-command))
+		 (and (not (bobp))
+		      (memq (char-syntax (char-before)) '(?\) ?\$)))
+		 (= 1 (logand 1 (- (point)
+				   (save-excursion
+				     (forward-char -1)
+				     (skip-syntax-backward "/\\")
+				     (point))))))
+	;; rebind `minibuffer-message' called by
+	;; `blink-matching-open' to handle the overlay display
+	(cl-letf (((symbol-function #'minibuffer-message)
+		   (lambda (msg &rest args)
+		     (let ((msg (apply #'format-message msg args)))
+		       (setq show-paren--off-screen-overlay
+			     (display-line-overlay
+			      (window-start) msg ))))))
+	  (blink-matching-open))))
     (advice-add #'show-paren-function :after #'show-paren-off-screen)))
 
 (use-package exec-path-from-shell
@@ -486,9 +413,8 @@ FACE defaults to inheriting from default and highlight."
     "tp" 'treemacs-add-and-display-current-project
     ))
 
-;;; helm-treemacs
 (defun move-to-front (list x)
-   (cons x (remove x list)))
+  (cons x (remove x list)))
 
 (setq helm--treemacs-last-candidate "Default")
 
@@ -523,7 +449,6 @@ FACE defaults to inheriting from default and highlight."
 			     (treemacs-select-workspace-by-name candidate))
 		   )
 	:buffer "*helm treemacs*"))
-;;; helm-treemacs ends
 
 (use-package treemacs-projectile)
 
@@ -551,7 +476,7 @@ FACE defaults to inheriting from default and highlight."
   :bind (("s-b" . xref-find-definitions)
 	 ("s-]" . xref-find-definitions)
 	 ("s-[" . evil-jump-backward))
-  :init 
+  :init
   (setq lsp-auto-guess-root t)       ; Detect project root
   (setq lsp-prefer-flymake nil)      ; Use lsp-ui and flycheck
   (setq flymake-fringe-indicator-position 'right-fringe)
@@ -560,7 +485,7 @@ FACE defaults to inheriting from default and highlight."
   (setq lsp-inhibit-message t
 	lsp-message-project-root-warning t
 	create-lockfiles nil
-	lsp-session-file (concat emacs-cache-dir "lsp-session"))
+	)
 
   ;; Restart server/workspace in case the lsp server exits unexpectedly.
   ;; https://emacs-china.org/t/topic/6392
@@ -637,7 +562,7 @@ FACE defaults to inheriting from default and highlight."
 
 ;; go
 (use-package go-mode
-  :init 
+  :init
   ;; 环境变量
   (when (memq window-system '(mac ns x))
     (dolist (var '("GOPATH" "GO15VENDOREXPERIMENT"))
@@ -757,16 +682,6 @@ FACE defaults to inheriting from default and highlight."
   :mode (("WORKSPACE\\'" . bazel-mode)
 	 ("BUILD\\'" . bazel-mode)))
 
-;; keybindings
-(defun open-init-el ()
-  (interactive)
-  (find-file "~/.emacs.d/init.el"))
-
-(defun switch-to-scratch ()
-  (interactive)
-  (switch-to-buffer "*scratch*"))
-
-
 (use-package which-key
   :init
   (setq which-key-popup-type 'side-window
@@ -776,23 +691,69 @@ FACE defaults to inheriting from default and highlight."
 	which-key-prefix-prefix "+"
 	which-key-side-window-max-heght 0.25)
   :config
-  (which-key-add-key-based-replacements
-    "SPC b" "buffer"
-    "SPC c" "comment"
-    "SPC e" "expand"
-    "SPC f" "file"
-    "SPC h" "helm"
-    "SPC m" "mode"
-    "SPC p" "projectile"
-    "SPC q" "quit"
-    "SPC t" "treemacs"
-    "SPC w" "window"
-    )
   (which-key-mode 1))
 
+;;; ----------------------------------------------------------------------------
+;;; My Functions
+
+(defun kill-all-buffers (KILL-STARRED-BUFFER)
+  "Kill all buffers."
+  (dolist (buffer (buffer-list))
+    (let ((bname (string-trim (buffer-name buffer))))
+      (if (and (not KILL-STARRED-BUFFER)
+	       (string-prefix-p "*" bname)
+	       (string-suffix-p "*" bname))
+	  nil
+	(kill-buffer-if-not-modified buffer)
+	))))
+
+(defun kill-all-buffers-i ()
+  (interactive)
+  (kill-buffers nil))
+
+(defun switch-to-modified-buffer ()
+  "Switch to modified buffer"
+  (interactive)
+  (let ((buf-list (seq-filter (lambda (x)
+				(not
+				 (or
+				  (not (buffer-modified-p x))
+				  (s-prefix? "*" (buffer-name x))
+				  (s-prefix? " *" (buffer-name x))
+				  (s-suffix? "-mode" (buffer-name x)))))
+			      (buffer-list))))
+    (if buf-list
+	(switch-to-buffer (first buf-list))
+      (message "No buffer modified."))))
+
+(defun open-init-el ()
+  "Open ~/.emacs.d/init.el"
+  (interactive)
+  (find-file "~/.emacs.d/init.el"))
+
+(defun switch-to-scratch ()
+  "Swtich to *scratch* buffer"
+  (interactive)
+  (switch-to-buffer "*scratch*"))
+
+;;; ----------------------------------------------------------------------------
+;;; Init Keys
+
+(which-key-add-key-based-replacements
+  "SPC b" "buffer"
+  "SPC c" "comment"
+  "SPC e" "expand"
+  "SPC f" "file"
+  "SPC h" "helm"
+  "SPC m" "mode"
+  "SPC p" "projectile"
+  "SPC q" "quit"
+  "SPC t" "treemacs"
+  "SPC w" "window"
+  )
+
 (bind-keys
- ("C-j" . ace-window)
- )
+ ("C-j" . ace-window))
 
 (bind-keys
  :map evil-normal-state-map
@@ -814,8 +775,9 @@ FACE defaults to inheriting from default and highlight."
 
   ;; buffer
   "bd"  'kill-this-buffer
-  "bD"  'kill-all-buffers
+  "bD"  'kill-all-buffers-i
   "bs"  'switch-to-scratch
+  "bm"  'switch-to-modified-buffer
 
   ;; window
   "wd"    'delete-window
@@ -832,7 +794,7 @@ FACE defaults to inheriting from default and highlight."
 
   ;; move
   "SPC"   'avy-goto-word-1
-  "l"     'avy-goto-line        
+  "l"     'avy-goto-line
 
   ;; quit
   "qq" 'save-buffers-kill-emacs
