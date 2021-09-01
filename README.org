@@ -15,12 +15,12 @@ My emacs configuration.
 * Install dependencies
 ** Ripgrep
    #+BEGIN_SRC sh
-   scoop install ripgrep
+   scoop install ripgrep # windows
    #+END_SRC
    
 ** The Silver Searcher
    #+BEGIN_SRC sh
-   scoop install ag
+   scoop install ag # windows
    #+END_SRC
 
 ** Golang
