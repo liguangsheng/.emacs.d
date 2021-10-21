@@ -44,7 +44,10 @@
 		 doom-modeline-workspace-name t
 		 doom-modeline-env-go-executable "go"))
 
+(use-package atom-one-dark-theme :defer t)
+
 (add-hook 'emacs-startup-hook (lambda () (load-theme 'doom-acario-light t)))
+
 
 (provide 'init-theme)
 ;;; init-theme.el ends here

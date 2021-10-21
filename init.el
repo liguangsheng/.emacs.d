@@ -14,7 +14,7 @@
 ;;; Quick Settings:
 
 (setq-default
- prefer-en-font "Consolas:pixelsize=13"
+ ;; prefer-en-font "Source Code Pro for Powerline:pixelsize=12"
  ;; Proxy
  ;; url-proxy-services '(("http"  . "127.0.0.1:1080")
  ;; 		         ("https" . "127.0.0.1:1080")))
@@ -120,11 +120,21 @@
   `(when (fboundp ,func) ,@body))
 
 (use-package evil
-  :hook ((text-mode prog-mode fundamental-mode) . #'evil-mode)
+  :ensure t
+  :init
+  (setq evil-want-integration t
+	evil-want-keybinding nil)
+  (evil-mode 1)
+  ;; :hook ((text-mode prog-mode fundamental-mode) . #'evil-mode)
   :config
   (evil-ex-define-cmd "W"    'evil-write)
   (evil-ex-define-cmd "q"    'kill-this-buffer)
   (evil-ex-define-cmd "quit" 'evil-quit))
+
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init))
 
 ;; (use-package evil-leader
 ;;   :config
@@ -309,6 +319,7 @@
 
   :bind
   (:map global-map
+	("<f2>"      . treemacs)
 	("M-0"       . treemacs-select-window)
 	("C-x t 1"   . treemacs-delete-other-windows)
 	("C-x t t"   . treemacs)
@@ -487,8 +498,7 @@
 	 ("M-[" . xref-pop-marker-stack))
 
   :init
-  (setq create-lockfiles nil
-	lsp-auto-guess-root t       ; Detect project root
+  (setq lsp-auto-guess-root t       ; Detect project root
 	lsp-inhibit-message t
 	lsp-message-project-root-warning t
 	lsp-prefer-flymake nil      ; Use lsp-ui and flycheck

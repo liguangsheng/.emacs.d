@@ -15,11 +15,17 @@
 (defvar prefer-cn-font nil)
 (defvar prefer-en-font nil)
 
+;; (progn
+;;   (setq prefer-en-font "Fira Code:pixelsize=12")
+;;   (setup-fonts))
+
 (setq-default cjk-charsets  '(kana han symbol cjk-misc bopomofo)
 	      default-unicode-fonts '("Apple Color Emoji" "Segoe UI Symbol" "Symbola" "Symbol")
 	      default-cn-fonts      `(,(font-spec :family "WenQuanYi Micro Hei" :height 90)
 				      ,(font-spec :family "Microsoft Yahei" :height 90))
-	      default-en-fonts      '("Droid Sans Mono:size=13"
+	      default-en-fonts      '("Fira Code:pixelsize=12"       ;; https://github.com/tonsky/FiraCode
+				      "Source Code Pro:pixelsize=12" ;; https://github.com/adobe-fonts/source-code-pro
+				      "Droid Sans Mono:pixelsize=12" ;; https://github.com/aosp-mirror/platform_frameworks_base/tree/master/data/fonts
 				      "Menlo:size=13"
 				      "Monoco:size=13"
 				      "Consolas:size=13"
@@ -53,7 +59,7 @@
   )
 
 (when (display-graphic-p)
-  (add-hook 'after-init-hook 'setup-fonts)
+  (add-hook 'after-init-hook #'setup-fonts)
   (add-hook 'minibuffer-setup-hook '(lambda () (set (make-local-variable 'face-remapping-alist) '((default :height 90))))))
 
 (provide 'init-fonts)
