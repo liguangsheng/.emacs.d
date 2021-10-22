@@ -32,9 +32,9 @@
 		 doom-modeline-project-detection 'project
 		 doom-modeline-buffer-file-name-style 'relative-to-project
 		 doom-modeline-icon (display-graphic-p)
-		 doom-modeline-modal-icon nil
+		 doom-modeline-modal-icon t
 		 doom-modeline-major-mode-icon t
-		 doom-modeline-buffer-state-icon t
+		 doom-modeline-buffer-state-icon (display-graphic-p)
 		 doom-modeline-buffer-modification-icon t
 		 doom-modeline-number-limit 99
 		 doom-modeline-lsp t
@@ -44,10 +44,10 @@
 		 doom-modeline-workspace-name t
 		 doom-modeline-env-go-executable "go"))
 
-(use-package atom-one-dark-theme :defer t)
+(require 'xyz-theme)
 
-(add-hook 'emacs-startup-hook (lambda () (load-theme 'doom-acario-light t)))
-
+;; (add-hook 'emacs-startup-hook (lambda () (load-theme perferences/theme t)))
+(load-theme perferences/theme t)
 
 (provide 'init-theme)
 ;;; init-theme.el ends here

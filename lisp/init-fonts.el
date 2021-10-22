@@ -1,66 +1,86 @@
 ;;; init-fonts.el -- 字体相关配置
 
 ;;; Commentary:
-
-;;; Code:
-
-;;; Fonts:
-;; recommend: https://github.com/powerline/fonts
-;; Font Example:
-;; 春眠不觉晓，处处闻啼鸟
-;; abcdefghijklmnopqrstuvwxyz
-;; ABCDEFGHIJKLMNOPQRSTUVWXYZ
-;; 0123456789
+;;
+;; Recommend Fonts:
+;; 
+;; Latin: https://fonts.google.com/specimen/Roboto+Mono
+;; Latin: https://github.com/tonsky/FiraCode
+;; Latin: https://github.com/adobe-fonts/source-code-pro
+;; Latin: https://github.com/aosp-mirror/platform_frameworks_base/tree/master/data/fonts;; Code:
+;; Chinese: http://wenq.org/wqy2/index.cgi
 
 (defvar prefer-cn-font nil)
+
 (defvar prefer-en-font nil)
 
-;; (progn
-;;   (setq prefer-en-font "Fira Code:pixelsize=12")
-;;   (setup-fonts))
+(defconst cjk-charsets '(kana han symbol cjk-misc bopomofo))
 
-(setq-default cjk-charsets  '(kana han symbol cjk-misc bopomofo)
-	      default-unicode-fonts '("Apple Color Emoji" "Segoe UI Symbol" "Symbola" "Symbol")
-	      default-cn-fonts      `(,(font-spec :family "WenQuanYi Micro Hei" :height 90)
-				      ,(font-spec :family "Microsoft Yahei" :height 90))
-	      default-en-fonts      '("Fira Code:pixelsize=12"       ;; https://github.com/tonsky/FiraCode
-				      "Source Code Pro:pixelsize=12" ;; https://github.com/adobe-fonts/source-code-pro
-				      "Droid Sans Mono:pixelsize=12" ;; https://github.com/aosp-mirror/platform_frameworks_base/tree/master/data/fonts
-				      "Menlo:size=13"
-				      "Monoco:size=13"
-				      "Consolas:size=13"
-				      "Courier New:size=13"
-				      "monospace:size=13"))
+(defconst fallback-unicode-fonts '("Apple Color Emoji" "Segoe UI Symbol" "Symbola" "Symbol"))
 
-(defun font-installed-p (font-name)
-  "Check if font with FONT-NAME is available."
-  (find-font (font-spec :name font-name)))
+(defconst fallback-cn-fonts `(,(font-spec :family "WenQuanYi Micro Hei" :size 14)
+			      ,(font-spec :family "WenQuanYi Zen Hei" :size 14)
+			      ,(font-spec :family "Microsoft Yahei" :size 14)))
+
+(defconst fallback-fonts '("Roboto Mono:pixelsize=12"
+			   "Fira Code:pixelsize=12"
+			   "Source Code Pro:pixelsize=12"
+			   "Droid Sans Mono:pixelsize=12"
+			   "Menlo:size=13"
+			   "Monoco:size=13"
+			   "Consolas:size=13"
+			   "Courier New:size=13"
+			   "monospace:size=13"))
+
+(defun must-list (v)
+  (if (listp v) v (list v)))
+
+(defun font-installed-p (font)
+  "Check if font is available."
+  (cond ((stringp font) (find-font (font-spec :name font)))
+	((fontp font) (find-font font))
+	(t nil)))
+
+(defun setup-unicode-font (&optional font)
+  (cl-loop for font-item in (append (must-list font) fallback-unicode-fonts)
+	   when (font-installed-p font-item)
+           return (set-fontset-font t 'unicode font-item nil 'prepend)))
+
+
+(defun setup-cnfont (&optional font)
+  (cl-loop for font-item in (append (must-list font) fallback-cn-fonts)
+	   when (font-installed-p font-item)
+	   do (cl-loop for charset in cjk-charsets
+		       do (set-fontset-font t charset font-item))
+	   return t))
+
+(defun setup-font (&optional font)
+  (cl-loop for font-item in (append `(,font) fallback-fonts)
+	   ;; when (font-installed-p font-item)
+	   do (progn
+		(set-frame-font font-item)
+		)
+	   return font-item))
 
 (defun setup-fonts ()
   (interactive)
-  ;; set unicode fonts
-  (cl-loop for font in default-unicode-fonts
-	   when (font-installed-p font)
-           return(set-fontset-font t 'unicode font nil 'prepend))
+  (progn
+    (setup-unicode-font)
+    (setup-font   perferences/font)
+    (setup-cnfont perferences/cnfont)
+    ))
 
-  ;; set en fonts
-  (let ((fonts (copy-sequence default-en-fonts)))
-    (when (or (stringp prefer-en-font) (fontp prefer-en-font)) (push prefer-en-font fonts))
-    (cl-loop for font in fonts
-	     when (font-installed-p font)
-	     return (set-frame-font font)))
+(when *gui* (setup-fonts))
+;; (when *gui* (add-hook 'after-init-hook #'setup-fonts))
 
-  ;; set cjk fonts
-  (let ((fonts (copy-sequence default-cn-fonts)))
-    (when (or (stringp prefer-cn-font) (fontp prefer-cn-font)) (push prefer-cn-font fonts))
-    (cl-loop for font in fonts
-	     do (cl-loop for charset in cjk-charsets
-			 do (set-fontset-font t charset font))))
-  )
-
-(when (display-graphic-p)
-  (add-hook 'after-init-hook #'setup-fonts)
-  (add-hook 'minibuffer-setup-hook '(lambda () (set (make-local-variable 'face-remapping-alist) '((default :height 90))))))
+;; Font Example:
+;; 千山鸟飞绝，万径人踪灭。
+;; 孤舟蓑笠翁，独钓寒江雪。
+;; abcdefghijklmnopqrstuvwxyz0123456789
+;; ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+;; :smile::cry::bear::bike::rose::thumbup::thumbdown::ok:
+;; αβγδεζηθικlμνξοpρsτυφχψω
+;; ΑΒΓΔΕΖΗΘΙΚλΜΝΞΟπΡσΤΥΦΧΨΩ
 
 (provide 'init-fonts)
 ;;; init-fonts.el ends here

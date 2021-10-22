@@ -9,121 +9,45 @@
 
 ;;; Code:
 
-(load-file "~/.emacs.d/lisp/init-first.el")
+(require 'init-startup (expand-file-name "lisp/init-startup.el" user-emacs-directory))
+(require 'init-packages)
 
 ;;; Quick Settings:
 
 (setq-default
- ;; prefer-en-font "Source Code Pro for Powerline:pixelsize=12"
- ;; Proxy
- ;; url-proxy-services '(("http"  . "127.0.0.1:1080")
- ;; 		         ("https" . "127.0.0.1:1080")))
- use-tabnine *i-am-rich*
- ;; 尽量使用posframe
- prefer-posframe t
- ;; 尽量使用图标
- prefer-icons (display-graphic-p)
- ;; org files directory
- org-directory "~/sync/org"
- ;; python 可执行文件地址
- python-shell-interpreter "python3"
+ perferences/theme (cond (*windows* (if *gui* 'doom-nord 'base16-nord))
+						 (*macos*   (if *gui* 'doom-nord 'doom-nord))
+						 (*linux*   (if *gui* 'doom-nord 'doom-one)))
+
+ perferences/font   "Roboto Mono:pixelsize=12"
+ perferences/cnfont (font-spec :family "WenQuanYi Micro Hei" :size 14)
+
+ perferences/python-executable (cond (*windows* "C:\\Program Files\\Python39\\python.exe")
+									 (t         "python3"))
+
+ perferences/enable-icons    *gui*
+ perferences/enable-tabnine  t
+ perferences/enable-posframe t
+ perferences/enable-server   t
+
+ line-spacing       0.1
  )
 
-(when *win64*
-  (setq org-directory "e:/sync/org/"
-	python-shell-interpreter "C:\\Program Files\\Python39\\python.exe"
-	))
+(require 'init-basic)
 
-(require 'init-better-defaults)
-(require 'init-packages)
+;; Initialize UI
+(require 'init-fonts)
+(require 'init-theme)
+(require 'init-icons)
+(require 'init-posframe)
 
-;; Features
-(use-package gcmh
-  :ensure t
-  :custom
-  (gcmh-idle-delay 10)
-  (gcmh-high-cons-threshold #x6400000) ;; 100 MB
-  :hook (after-init . gcmh-mode))
-
-(use-package s)
-
-(defun copy-file-path ()
-  (interactive "P")
-  (kill-new (file-relative-name  (buffer-file-name) (projectile-project-root))))
-
-(defun indent-whole-buffer ()
-  (interactive)
-  (save-excursion
-    (indent-region (point-min) (point-max) nil)))
-
-(setq-default keep-alive-buffers '("\\**\\*"
-				   "^\\*scratch\\*$"
-				   "^\\*Messages\\*$"
-				   ))
-
-(defun kill-all-buffers ()
-  (interactive)
-  (cl-loop for buffer in (buffer-list)
-	   for bufname = (s-trim (buffer-name buffer))
-	   unless (cl-loop for rx in keep-alive-buffers
-			   when (> (s-count-matches rx bufname) 0)
-			   return bufname)
-	   do (kill-buffer bufname)))
-
-(defun kill-other-buffers ()
-  (interactive)
-  (cl-loop for buffer in (buffer-list)
-	   for bufname = (buffer-name buffer)
-	   unless (or (string= bufname (buffer-name (current-buffer)))
-		      (cl-loop for rx in keep-alive-buffers
-			       when (> (s-count-matches rx bufname) 0)
-			       return bufname))
-	   do (kill-buffer bufname)))
-
-(defun switch-to-modified-buffer ()
-  "Switch to modified buffer"
-  (interactive)
-  (let ((buf-list
-	 (seq-filter
-	  (lambda (x) (not (or
-			    (not (buffer-modified-p x))
-			    (s-prefix? "*" (buffer-name x))
-			    (s-prefix? " *" (buffer-name x))
-			    (s-suffix? "-mode" (buffer-name x)))))
-	  (buffer-list))))
-    (if buf-list
-	(switch-to-buffer (first buf-list))
-      (message "No modified buffer."))))
-
-(defun open-init-el ()
-  "Open ~/.emacs.d/init.el"
-  (interactive)
-  (find-file "~/.emacs.d/init.el"))
-
-
-(defun open-inbox ()
-  "Open ~/INBOX"
-  (interactive)
-  (find-file "~/INBOX"))
-
-(defun switch-to-scratch ()
-  "Swtich to *scratch* buffer"
-  (interactive)
-  (switch-to-buffer "*scratch*"))
-
-(defun random-choice (LIST)
-  "Get a random choice from LIST"
-  (nth (mod (random) (length LIST)) LIST))
-
-(defmacro withf (func &rest body)
-  (declare (indent 1) (debug t))
-  `(when (fboundp ,func) ,@body))
+(require 'init-features)
 
 (use-package evil
   :ensure t
   :init
   (setq evil-want-integration t
-	evil-want-keybinding nil)
+		evil-want-keybinding nil)
   (evil-mode 1)
   ;; :hook ((text-mode prog-mode fundamental-mode) . #'evil-mode)
   :config
@@ -135,10 +59,6 @@
   :after evil
   :config
   (evil-collection-init))
-
-;; (use-package evil-leader
-;;   :config
-;;   (global-evil-leader-mode))
 
 (use-package evil-surround
   :config (global-evil-surround-mode 1))
@@ -153,105 +73,10 @@
   :preface
   (defun config-hydras--add-quit-bindings (result)
     (append '(("q" nil :exit t)
-              ("<escape>" nil :exit t))
+			  ("<escape>" nil :exit t))
             result))
   :config
   (advice-add #'pretty-hydra--get-heads :filter-return #'config-hydras--add-quit-bindings))
-
-(use-package undo-tree
-  :hook (after-init . global-undo-tree-mode)
-  :config
-  (setq undo-tree-visualizer-diff t
-        undo-tree-auto-save-history nil
-        undo-tree-enable-undo-in-region nil))
-
-(use-package dash)
-(use-package shut-up)
-(use-package winner
-  :config (winner-mode 1))
-
-(use-package restart-emacs)
-
-(use-package default-text-scale
-  :commands (default-text-scale-increase default-text-scale-decrease default-text-scale-reset)
-  :custom ((default-text-scale-amount 5)))
-
-;; 平滑滚动屏幕
-(use-package good-scroll
-  :config
-  (good-scroll-mode 1))
-
-;; 这个feature可能会影响company的候选框的显示
-(use-package fill-column-indicator
-  :disabled 
-  :init (setq fci-rule-column 120)
-  (add-hook 'prog-mode-hook #'fci-mode))
-
-;; 扩展选择区域
-(use-package expand-region)
-
-;; 跳转
-(use-package avy
-  :init
-  (avy-setup-default))
-
-;; emoji
-(when (display-graphic-p)
-  (use-package emojify
-    :hook (after-init . global-emojify-mode)))
-
-;; 彩虹分隔符
-(use-package rainbow-delimiters
-  :hook ((text-mode prog-mode fundamental-mode) . #'rainbow-delimiters-mode))
-
-;; 高亮缩进
-(use-package highlight-indentation
-  :disabled
-  :hook ((text-mode prog-mode fundamental-mode) . #'highlight-indentation-current-column-mode))
-
-;; 高亮数字
-(use-package highlight-numbers
-  :hook ((text-mode prog-mode fundamental-mode) . #'highlight-numbers-mode))
-
-;; 高亮TODO
-(use-package hl-todo
-  :init (global-hl-todo-mode))
-
-(use-package volatile-highlights
-  :config (volatile-highlights-mode t))
-
-;; 高亮对应的paren
-(use-package paren
-  :ensure nil
-  :hook (after-init . show-paren-mode)
-  :init (setq show-paren-when-point-inside-paren t
-	      show-paren-when-point-in-periphery t))
-
-(use-package exec-path-from-shell
-  :config
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
-
-(use-package vi-tilde-fringe
-  :init
-  (global-vi-tilde-fringe-mode))
-
-(use-package symbol-overlay
-  :diminish
-  :bind (("M-i" . symbol-overlay-put)
-         ("M-n" . symbol-overlay-jump-next)
-         ("M-p" . symbol-overlay-jump-prev)
-         ("M-N" . symbol-overlay-switch-forward)
-         ("M-P" . symbol-overlay-switch-backward)
-         ("M-C" . symbol-overlay-remove-all)
-         ([M-f3] . symbol-overlay-remove-all))
-  )
-
-;; 将buffer中#000000样式的16进制rgb渲染出染色
-;; 需要的时候手动开启M-x rainbow-mode
-(use-package rainbow-mode
-  :defer t
-  :commands (rainbow-mode))
 
 (use-package treemacs
   :ensure t
@@ -319,13 +144,13 @@
 
   :bind
   (:map global-map
-	("<f2>"      . treemacs)
-	("M-0"       . treemacs-select-window)
-	("C-x t 1"   . treemacs-delete-other-windows)
-	("C-x t t"   . treemacs)
-	("C-x t B"   . treemacs-bookmark)
-	("C-x t C-t" . treemacs-find-file)
-	("C-x t M-t" . treemacs-find-tag)))
+		("<f2>"      . treemacs)
+		("M-0"       . treemacs-select-window)
+		("C-x t 1"   . treemacs-delete-other-windows)
+		("C-x t t"   . treemacs)
+		("C-x t B"   . treemacs-bookmark)
+		("C-x t C-t" . treemacs-find-file)
+		("C-x t M-t" . treemacs-find-tag)))
 
 ;; (use-package treemacs-evil
 ;;   :after treemacs evil
@@ -353,7 +178,7 @@
 
 (use-package counsel
   :init (setq ivy-height 30
-	      ivy-initial-inputs-alist nil)
+			  ivy-initial-inputs-alist nil)
   :config
   (defun counsel-rg-dir ()
     "在指定文件夹下进行搜索，先到dired选择文件夹，运行此函数"
@@ -381,13 +206,13 @@
   :init (add-hook 'after-init-hook 'global-company-mode)
   :config
   (setq company-tooltip-align-annotations t ; aligns annotation to the right
-	company-tooltip-limit 24            ; bigger popup window
-	company-idle-delay 0.0              ; decrease delay before autocompletion popup shows
-	company-echo-delay 0                ; remove annoying blinking
-	company-minimum-prefix-length 1
-	company-require-match nil
-	company-dabbrev-ignore-case nil
-	company-dabbrev-downcase nil)
+		company-tooltip-limit 24            ; bigger popup window
+		company-idle-delay 0.0              ; decrease delay before autocompletion popup shows
+		company-echo-delay 0                ; remove annoying blinking
+		company-minimum-prefix-length 1
+		company-require-match nil
+		company-dabbrev-ignore-case nil
+		company-dabbrev-downcase nil)
   ;; Nicer looking faces
   (custom-set-faces
    '(company-tooltip-common
@@ -402,8 +227,8 @@
 
 (use-package projectile
   :bind (:map projectile-mode-map
-              ("s-t" . projectile-find-file) ; `cmd-t' or `super-t'
-              ("C-c p" . projectile-command-map))
+			  ("s-t" . projectile-find-file) ; `cmd-t' or `super-t'
+			  ("C-c p" . projectile-command-map))
 
   :hook (after-init . projectile-mode)
 
@@ -418,10 +243,10 @@
     (setq projectile-generic-command
           (let ((rg-cmd ""))
             (dolist (dir projectile-globally-ignored-directories)
-              (setq rg-cmd (format "%s --glob '!%s'" rg-cmd dir)))
+			  (setq rg-cmd (format "%s --glob '!%s'" rg-cmd dir)))
             (concat "rg -0 --files --color=never --hidden" rg-cmd))))
 
-  (when *win64*
+  (when *windows*
     (when (or (executable-find "fd") (executable-find "rg"))
       (setq projectile-indexing-method 'alien
             projectile-enable-caching t))
@@ -441,11 +266,11 @@
 (use-package which-key
   :init
   (setq which-key-popup-type 'side-window
-	which-key-side-window-location 'bottom
-	which-key-idle-delay 0.4
-	which-key-separator " → "
-	which-key-prefix-prefix "+"
-	which-key-side-window-max-heght 0.25)
+		which-key-side-window-location 'bottom
+		which-key-idle-delay 0.4
+		which-key-separator " → "
+		which-key-prefix-prefix "+"
+		which-key-side-window-max-heght 0.25)
   :config
   (which-key-mode 1))
 
@@ -479,42 +304,42 @@
        :underline (:style line :color ,(face-foreground 'success)))))
 
   :hook ((lsp-mode . (lambda ()
-		       ;; Integrate `which-key'
-		       (lsp-enable-which-key-integration)
+					   ;; Integrate `which-key'
+					   (lsp-enable-which-key-integration)
 
-		       ;; Format and organize imports
-		       ;;  (add-h ook 'before-save-hook #'lsp-format-buffer t t)
-		       ;;  (add-hook 'before-save-hook #'lsp-organize-imports t t))
-		       ))
-	 (lsp-managed-mode-hook . 'lsp-diagnostics-modeline-mode))
+					   ;; Format and organize imports
+					   ;;  (add-h ook 'before-save-hook #'lsp-format-buffer t t)
+					   ;;  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+					   ))
+		 (lsp-managed-mode-hook . 'lsp-diagnostics-modeline-mode))
 
   :bind (:map lsp-mode-map
-	      ("C-c C-d" . lsp-describe-thing-at-point)
-	      ([remap xref-find-definitions] . lsp-find-definition)
-	      ([remap xref-find-references] . lsp-find-references))
+			  ("C-c C-d" . lsp-describe-thing-at-point)
+			  ([remap xref-find-definitions] . lsp-find-definition)
+			  ([remap xref-find-references] . lsp-find-references))
 
   :bind (("M-b" . xref-find-definitions)
-	 ("M-]" . xref-find-definitions)
-	 ("M-[" . xref-pop-marker-stack))
+		 ("M-]" . xref-find-definitions)
+		 ("M-[" . xref-pop-marker-stack))
 
   :init
   (setq lsp-auto-guess-root t       ; Detect project root
-	lsp-inhibit-message t
-	lsp-message-project-root-warning t
-	lsp-prefer-flymake nil      ; Use lsp-ui and flycheck
-	lsp-keep-workspace-alive nil
-	lsp-signature-auto-activate nil
-	lsp-modeline-code-actions-enable nil
-	lsp-modeline-diagnostics-enable nil
-	lsp-modeline-workspace-status-enable nil
-	lsp-enable-file-watchers nil
-	lsp-enable-folding nil
-	lsp-enable-symbol-highlighting nil
-	lsp-enable-text-document-color nil
-	lsp-enable-indentation nil
-	lsp-enable-on-type-formatting nil
-	lsp-diagnostics-modeline-scope :project
-	)
+		lsp-inhibit-message t
+		lsp-message-project-root-warning t
+		lsp-prefer-flymake nil      ; Use lsp-ui and flycheck
+		lsp-keep-workspace-alive nil
+		lsp-signature-auto-activate nil
+		lsp-modeline-code-actions-enable nil
+		lsp-modeline-diagnostics-enable nil
+		lsp-modeline-workspace-status-enable nil
+		lsp-enable-file-watchers nil
+		lsp-enable-folding nil
+		lsp-enable-symbol-highlighting nil
+		lsp-enable-text-document-color nil
+		lsp-enable-indentation nil
+		lsp-enable-on-type-formatting nil
+		lsp-diagnostics-modeline-scope :project
+		)
 
   :config
   ;; Restart server/workspace in case the lsp server exits unexpectedly.
@@ -538,46 +363,36 @@
   :hook (lsp-mode . lsp-ui-mode)
   :init (setq scroll-margin 0)
   :config  (add-hook 'after-load-theme-hook
-		     (lambda ()
-		       (setq lsp-ui-doc-border (face-foreground 'font-lock-comment-face))
-		       (set-face-background 'lsp-ui-doc-background (face-background 'tooltip))))
+					 (lambda ()
+					   (setq lsp-ui-doc-border (face-foreground 'font-lock-comment-face))
+					   (set-face-background 'lsp-ui-doc-background (face-background 'tooltip))))
   :bind (("C-c u" . lsp-ui-imenu)
-	 :map lsp-ui-mode-map
-	 ("M-RET" . lsp-ui-sideline-apply-code-actions))
+		 :map lsp-ui-mode-map
+		 ("M-RET" . lsp-ui-sideline-apply-code-actions))
   :hook (lsp-mode . lsp-ui-mode)
   :init (setq lsp-ui-sideline-show-diagnostics nil
-	      lsp-ui-sideline-ignore-duplicate t
-	      ;; lsp-ui-doc-position 'at-point
-	      lsp-ui-doc-border (face-foreground 'font-lock-comment-face)
-	      lsp-ui-imenu-colors `(,(face-foreground 'font-lock-keyword-face)
-				    ,(face-foreground 'font-lock-string-face)
-				    ,(face-foreground 'font-lock-constant-face)
-				    ,(face-foreground 'font-lock-variable-name-face)))
+			  lsp-ui-sideline-ignore-duplicate t
+			  ;; lsp-ui-doc-position 'at-point
+			  lsp-ui-doc-border (face-foreground 'font-lock-comment-face)
+			  lsp-ui-imenu-colors `(,(face-foreground 'font-lock-keyword-face)
+									,(face-foreground 'font-lock-string-face)
+									,(face-foreground 'font-lock-constant-face)
+									,(face-foreground 'font-lock-variable-name-face)))
   :config
   ;; `C-g'to close doc
   (advice-add #'keyboard-quit :before #'lsp-ui-doc-hide)
 
   ;; Reset `lsp-ui-doc-background' after loading theme
   (add-hook 'after-load-theme-hook
-	    (lambda ()
-	      (setq lsp-ui-doc-border (face-foreground 'font-lock-comment-face))
-	      (set-face-background 'lsp-ui-doc-background (face-background 'tooltip)))))
+			(lambda ()
+			  (setq lsp-ui-doc-border (face-foreground 'font-lock-comment-face))
+			  (set-face-background 'lsp-ui-doc-background (face-background 'tooltip)))))
 
 (use-package lsp-ivy)
 
 (require 'init-keybindings)
 (require 'init-lang)
 
-;;; UI:
-(require 'init-posframe)
-(require 'init-icons)
-(require 'init-theme)
-(require 'init-fonts)
-
-;;; Server:
-(use-package server
-  :commands (server-running-p server-start)
-  :hook (after-init . (lambda () (unless (server-running-p) (server-start)))))
 
 ;;; Experimental:
 (use-package esup)

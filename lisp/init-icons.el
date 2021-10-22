@@ -4,9 +4,9 @@
 
 ;;; Code:
 
-(defvar prefer-icons (display-graphic-p))
+(defvar perferences/enable-icons *gui*)
 
-(use-package all-the-icons :if prefer-icons)
+(use-package all-the-icons :if perferences/enable-icons)
 
 (use-package all-the-icons-ivy
   :after all-the-icons ivy

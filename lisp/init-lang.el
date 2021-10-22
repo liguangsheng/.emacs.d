@@ -25,8 +25,9 @@
 	  indent-tabs-mode 1)
     (subword-mode 1)
     (lsp-deferred)
-    (add-hook 'before-save-hook #'lsp-format-buffer t t)
-    (add-hook 'before-save-hook #'lsp-organize-imports t t))
+    ;; (add-hook 'before-save-hook #'lsp-format-buffer t t)
+    ;; (add-hook 'before-save-hook #'lsp-organize-imports t t))
+)
   )
 
 (use-package flycheck-golangci-lint

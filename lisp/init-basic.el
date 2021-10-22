@@ -1,8 +1,78 @@
-;;; init-better-defaults.el -- better defaults
+(defvaralias 'perferences/python-executable 'python-shell-interpreter)
 
-;;; Commentary:
+(defvar perferences/enable-server nil)
 
-;;; Code:
+(defun copy-file-path ()
+  (interactive "P")
+  (kill-new (file-relative-name  (buffer-file-name) (projectile-project-root))))
+
+(defun indent-whole-buffer ()
+  (interactive)
+  (save-excursion
+    (indent-region (point-min) (point-max) nil)))
+
+(setq-default keep-alive-buffers '("\\**\\*"
+				   "^\\*scratch\\*$"
+				   "^\\*Messages\\*$"
+				   ))
+
+(defun kill-all-buffers ()
+  (interactive)
+  (cl-loop for buffer in (buffer-list)
+	   for bufname = (s-trim (buffer-name buffer))
+	   unless (cl-loop for rx in keep-alive-buffers
+			   when (> (s-count-matches rx bufname) 0)
+			   return bufname)
+	   do (kill-buffer bufname)))
+
+(defun kill-other-buffers ()
+  (interactive)
+  (cl-loop for buffer in (buffer-list)
+	   for bufname = (buffer-name buffer)
+	   unless (or (string= bufname (buffer-name (current-buffer)))
+		      (cl-loop for rx in keep-alive-buffers
+			       when (> (s-count-matches rx bufname) 0)
+			       return bufname))
+	   do (kill-buffer bufname)))
+
+(defun switch-to-modified-buffer ()
+  "Switch to modified buffer"
+  (interactive)
+  (let ((buf-list
+	 (seq-filter
+	  (lambda (x) (not (or
+			    (not (buffer-modified-p x))
+			    (s-prefix? "*" (buffer-name x))
+			    (s-prefix? " *" (buffer-name x))
+			    (s-suffix? "-mode" (buffer-name x)))))
+	  (buffer-list))))
+    (if buf-list
+	(switch-to-buffer (first buf-list))
+      (message "No modified buffer."))))
+
+(defun open-init-el ()
+  "Open ~/.emacs.d/init.el"
+  (interactive)
+  (find-file "~/.emacs.d/init.el"))
+
+(defun open-inbox ()
+  "Open ~/INBOX"
+  (interactive)
+  (find-file "~/INBOX"))
+
+(defun switch-to-scratch ()
+  "Swtich to *scratch* buffer"
+  (interactive)
+  (switch-to-buffer "*scratch*"))
+
+(defun random-choice (LIST)
+  "Get a random choice from LIST"
+  (nth (mod (random) (length LIST)) LIST))
+
+(defmacro withf (func &rest body)
+  (declare (indent 1) (debug t))
+  `(when (fboundp ,func) ,@body))
+
 
 (when (< emacs-major-version 27)
   (tool-bar-mode -1)
@@ -33,9 +103,13 @@
  vc-follow-symlinks                       t
  version-control                          t
  visible-bell                             0
- make-backup-files                        nil
  inhibit-compacting-font-caches           t
  )
+
+;; Backup 
+(setq  make-backup-files nil
+       backup-inhibited  t
+       auto-save-default nil)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 ;; (cua-mode 1)
@@ -77,5 +151,15 @@
   (set-selection-coding-system 'utf-16-le)
   (set-clipboard-coding-system 'utf-16-le))
 
-(provide 'init-better-defaults)
-;;; init-better-defaults.el ends here
+
+(use-package server
+  :commands
+  (server-running-p server-start)
+  :hook
+  (after-init . (lambda () (when (and perferences/enable-server
+				      (not (server-running-p)) (server-start))))))
+
+
+
+(provide 'init-basic)
+

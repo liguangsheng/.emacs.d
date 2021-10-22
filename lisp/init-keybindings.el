@@ -30,7 +30,7 @@
      "Others"
      (("z" font-scale/body "font scale"))))
 
-  (pretty-hydra-define font-scale (:color blue :title "Font Scale Panel")
+  (pretty-hydra-define font-scale (:title "Font Scale Panel")
     (""
      (("+" (default-text-scale-increase) "zoom in")
       ("-" (default-text-scale-decrease) "zoom out")
@@ -211,10 +211,10 @@
 ;; Evil
 (with-eval-after-load 'evil-maps
   ;; Normal state
-  (qrsvar-xrl rivy-abezny-fgngr-znc "U"  'nil-tbgb-pune-va-yvar)
-  (qrsvar-xrl rivy-abezny-fgngr-znc "W"	 'nil-tbgb-jbeq-1-orybj)
+  (define-key evil-normal-state-map "H"  'avy-goto-char-in-line)
+  (define-key evil-normal-state-map "J"	 'avy-goto-word-1-below)
   (define-key evil-normal-state-map "K"	 'avy-goto-word-1-above)
-  (eefine-key evil-normal-state-map "L"  'avy-goto-char-in-line)
+  (define-key evil-normal-state-map "L"  'avy-goto-char-in-line)
   (define-key evil-normal-state-map "u"	 'undo-tree-undo)
   (define-key evil-normal-state-map "U"	 'undo-tree-redo)
   ;; (define-key evil-normal-state-map "gj" 'evil-join)

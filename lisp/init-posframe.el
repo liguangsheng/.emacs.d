@@ -6,10 +6,10 @@
 
 ;;; Code:
 
-(defvar prefer-posframe t)
+(defvar perferences/enable-posframe t)
 
 (use-package posframe
-  :if prefer-posframe)
+  :if perferences/enable-posframe)
 
 (use-package ivy-posframe
   :after (:all posframe ivy)
