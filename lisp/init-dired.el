@@ -1,14 +1,10 @@
-;;; init-dired.el -- dired configuration
-
-;;; Commentary:
-
-;;; Code:
-
 (use-package dired
   :ensure nil
   :config
   (setq dired-recursive-deletes 'always
-        dired-recursive-copies 'always))
+        dired-recursive-copies  'always
+	dired-kill-when-opening-new-dired-buffer t
+	))
 
 (use-package dired-single
   :config
@@ -21,4 +17,3 @@
   )
 
 (provide 'init-dired)
-;;; init-dired.el ends here

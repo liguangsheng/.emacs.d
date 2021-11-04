@@ -3,6 +3,7 @@
 (use-package dash)
 (use-package shut-up)
 (use-package restart-emacs)
+(use-package wgrep)
 
 (use-package gcmh
   :diminish
@@ -28,9 +29,9 @@
 
 ;; 平滑滚动屏幕
 (when (and *gui* *emacs28+*)
-(use-package good-scroll
-  :config
-  (good-scroll-mode 1)))
+  (use-package good-scroll
+    :config
+    (good-scroll-mode 1)))
 
 ;; 这个feature可能会影响company的候选框的显示
 (use-package fill-column-indicator
@@ -76,7 +77,7 @@
   :ensure nil
   :hook (after-init . show-paren-mode)
   :init (setq show-paren-when-point-inside-paren t
-			  show-paren-when-point-in-periphery t))
+	      show-paren-when-point-in-periphery t))
 
 ;; 自动保存scratch buffer
 (use-package persistent-scratch
@@ -110,5 +111,25 @@
 (use-package rainbow-mode
   :defer t
   :commands (rainbow-mode))
+
+(use-package yasnippet
+  :config
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+  ;; (withf 'shut-up (shut-up (yas-global-mode 1))))
+  (yas-global-mode 1))
+
+(use-package flycheck)
+
+(use-package which-key
+  :init
+  (setq which-key-popup-type 'side-window
+		which-key-side-window-location 'bottom
+		which-key-idle-delay 0.4
+		which-key-separator " → "
+		which-key-prefix-prefix "+"
+		which-key-side-window-max-heght 0.25)
+  :config
+  (which-key-mode 1))
+
 
 (provide 'init-features)
