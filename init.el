@@ -15,7 +15,7 @@
 ;;; Quick Settings:
 
 (setq-default
- perferences/theme (cond (*windows* (if *gui* 'doom-nord 'base16-nord))
+ perferences/theme (cond (*windows* (if *gui* 'doom-spacegrey 'base16-nord))
 			 (*macos*   (if *gui* 'doom-nord 'doom-nord))
 			 (*linux*   (if *gui* 'doom-nord 'doom-one)))
 
@@ -30,8 +30,9 @@
  perferences/enable-posframe t
  perferences/enable-server   t
 
- line-spacing       0.1
+ line-spacing       0.12
  )
+
 
 (require 'init-basic)
 

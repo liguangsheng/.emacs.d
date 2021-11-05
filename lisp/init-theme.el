@@ -44,7 +44,8 @@
 		 doom-modeline-workspace-name t
 		 doom-modeline-env-go-executable "go"))
 
-(require 'xyz-theme)
+(require 'spolduck-theme)
+(require 'paper-theme)
 
 (use-package base16-theme)
 
