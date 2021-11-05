@@ -16,8 +16,8 @@
 
 (setq-default
  perferences/theme (cond (*windows* (if *gui* 'doom-spacegrey 'base16-nord))
-			 (*macos*   (if *gui* 'doom-nord 'doom-nord))
-			 (*linux*   (if *gui* 'doom-nord 'doom-one)))
+			 (*macos*   (if *gui* 'doom-spacegrey 'doom-spacegrey))
+			 (*linux*   (if *gui* 'doom-spacegrey 'doom-spacegrey)))
 
  perferences/font   "Roboto Mono:pixelsize=12"
  perferences/cnfont (font-spec :family "WenQuanYi Micro Hei" :size 14)
