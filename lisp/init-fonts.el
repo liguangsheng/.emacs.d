@@ -1,4 +1,4 @@
-;;; init-fonts.el -- å­—ä½“ç›¸å…³é…ç½®
+;;; init-fonts.el -- ×ÖÌåÏà¹ØÅäÖÃ
 
 ;;; Commentary:
 ;;

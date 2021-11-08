@@ -1,4 +1,4 @@
-;;; init-theme.el -- 涓婚鐩稿叧閰嶇疆
+;;; init-theme.el -- 主题相关配置
 
 ;;; Commentary:
 

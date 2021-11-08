@@ -33,12 +33,6 @@
     :config
     (good-scroll-mode 1)))
 
-;; 这个feature可能会影响company的候选框的显示
-(use-package fill-column-indicator
-  :disabled 
-  :init (setq fci-rule-column 120)
-  (add-hook 'prog-mode-hook #'fci-mode))
-
 ;; 扩展选择区域
 (use-package expand-region)
 
@@ -131,5 +125,12 @@
   :config
   (which-key-mode 1))
 
+(use-package diff-hl
+  :config
+  (global-diff-hl-mode))
+
+(use-package git-messenger
+  :init
+  (setq git-messenger:show-detail t))
 
 (provide 'init-features)

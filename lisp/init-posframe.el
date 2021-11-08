@@ -1,4 +1,4 @@
-;;; init-posframe.el -- posframe ç›¸å…³çš„é…ç½®
+;;; init-posframe.el -- posframe Ïà¹ØµÄÅäÖÃ
 
 ;;; Commentary:
 

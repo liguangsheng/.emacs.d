@@ -25,14 +25,15 @@
       ("e"    hydra-motions/body   "+ motions"))
 
      "Actions"
-     (("Qq" save-buffers-kill-emacs "quit emacs" :exit t)
-      ("Qr" restart-emacs "restart emacs" :exit t)
-      ("!"  shell-command "run shell command")
-      (":"  eval-expression "eval lisp expression")
-      ("d"  dired "dired")
-      ("D"  dired-other-window "dired(other window)")
-      ("t"  treemacs)
-      ("E"  er/expand-region "expand region"))
+     (("Qq" save-buffers-kill-emacs	 "quit emacs"		:exit t)
+      ("Qr" restart-emacs		 "restart emacs"	:exit t)
+      ("!"  shell-command		 "run shell command")
+      (":"  eval-expression		 "eval lisp expression")
+      ("d"  dired			 "dired")
+      ("D"  dired-other-window		 "dired(other window)")
+      ("t"  treemacs                     "treemacs")
+      ("E"  er/expand-region		 "expand region")
+      ("g"  git-messenger:popup-message "git: popup commit"))
 
      "Others"
      (("z" font-scale/body "font scale"))))
@@ -110,23 +111,24 @@
 
   (pretty-hydra-define hydra-projects (:color blue :title "Projects")
     ("project actions"
-     (("p" helm-projectile "project overview")
+     (("p" helm-projectile                  "project overview")
       ("b" helm-projectile-switch-to-buffer "project buffers")
-      ("S" helm-projectile-switch-project "switch project")
-      ("s" helm-projectile-ag "project search")
-      ("f" helm-projectile-find-file "find file in project" :exit t)
-      ("d" helm-projectile-find-dir "find dir in project" :exit t)
-      ("i" projectile-invalidate-cache :color blue)
+      ("S" helm-projectile-switch-project   "switch project")
+      ("s" helm-projectile-ag               "find in project")
+      ("g" helm-projectile-grep             "grep in project")
+      ("f" helm-projectile-find-file        "find file in project" :exit t)
+      ("d" helm-projectile-find-dir         "find dir in project"  :exit t)
+      ("i" projectile-invalidate-cache      "invalidate cache"     :color blue)
       )))
 
   (pretty-hydra-define hydra-buffers (:hint nil :color teal :title "Buffer Management Commands")
     ("Actions"
      (("b" helm-buffers-list "switch-buffer")
-      ("d" kill-this-buffer)
-      ("O" kill-other-buffers)
+      ("d" kill-this-buffer  "kill current buffer")
+      ("O" kill-other-buffers "kill other buffers")
       ("m" switch-to-modified-buffer)
-      ("s" swiper "search")
-      ("i" helm-imenu "fuzzy-search-imenu")
+      ("s" helm-swoop         "find in buffer")
+      ("i" helm-imenu         "fuzzy-search-imenu")
       ("S" switch-to-scratch))))
 
   (pretty-hydra-define hydra-files (:hint nil :color teal :title "Files Commands")

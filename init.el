@@ -48,7 +48,6 @@
 (require 'init-hydra)
 (require 'init-treemacs)
 (require 'init-helm)
-(require 'init-ivy)
 (require 'init-company)
 (require 'init-projectile)
 (require 'init-lsp)

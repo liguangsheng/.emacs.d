@@ -7,4 +7,7 @@
 (use-package helm-company
   :after (helm company))
 
+(use-package ag)
+(use-package helm-ag)
+
 (provide 'init-helm)
