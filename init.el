@@ -15,11 +15,11 @@
 ;;; Quick Settings:
 
 (setq-default
- perferences/theme (cond (*windows* (if *gui* 'doom-spacegrey 'base16-nord))
+ perferences/theme (cond (*windows* (if *gui* 'doom-spacegrey 'nil))
 			 (*macos*   (if *gui* 'doom-spacegrey 'doom-spacegrey))
 			 (*linux*   (if *gui* 'doom-spacegrey 'doom-spacegrey)))
 
- perferences/font   "Roboto Mono:pixelsize=12"
+ perferences/font   "Fira Code:pixelsize=12"
  perferences/cnfont (font-spec :family "WenQuanYi Micro Hei" :size 14)
 
  perferences/python-executable (cond (*windows* "C:\\Program Files\\Python39\\python.exe")
@@ -30,7 +30,7 @@
  perferences/enable-posframe t
  perferences/enable-server   t
 
- line-spacing       0.12
+ line-spacing       0.15
  )
 
 
@@ -47,6 +47,7 @@
 (require 'init-evil)
 (require 'init-hydra)
 (require 'init-treemacs)
+(require 'init-helm)
 (require 'init-ivy)
 (require 'init-company)
 (require 'init-projectile)
@@ -55,8 +56,8 @@
 (require 'init-lang)
 
 ;;; Experimental:
-(use-package esup)
-(message (format "%d packages loaded in %s" (length package-alist) (emacs-init-time)))
+;; (use-package esup)
+;; (message (format "%d packages loaded in %s" (length package-alist) (emacs-init-time)))
 
 ;;; Load custom file:
 (when (and custom-file (file-readable-p custom-file) (load custom-file)))

@@ -1,7 +1,7 @@
 (use-package projectile
   :bind (:map projectile-mode-map
-			  ("s-t" . projectile-find-file) ; `cmd-t' or `super-t'
-			  ("C-c p" . projectile-command-map))
+	      ("s-t" . projectile-find-file) ; `cmd-t' or `super-t'
+	      ("C-c p" . projectile-command-map))
 
   :hook (after-init . projectile-mode)
 
@@ -11,20 +11,23 @@
         projectile-use-git-grep t)
 
   :config
-  (when (and (not (executable-find "fd"))
-             (executable-find "rg"))
-    (setq projectile-generic-command
-          (let ((rg-cmd ""))
-            (dolist (dir projectile-globally-ignored-directories)
-			  (setq rg-cmd (format "%s --glob '!%s'" rg-cmd dir)))
-            (concat "rg -0 --files --color=never --hidden" rg-cmd))))
+  ;; (when (and (not (executable-find "fd"))
+  ;;            (executable-find "rg"))
+  ;;   (setq projectile-generic-command
+  ;;         (let ((rg-cmd ""))
+  ;;           (dolist (dir projectile-globally-ignored-directories)
+  ;; 			  (setq rg-cmd (format "%s --glob '!%s'" rg-cmd dir)))
+  ;;           (concat "rg -0 --files --color=never --hidden" rg-cmd))))
 
   (when *windows*
-    (when (or (executable-find "fd") (executable-find "rg"))
-      (setq projectile-indexing-method 'alien
-            projectile-enable-caching t))
+    (setq projectile-indexing-method 'native
+	  projectile-enable-caching  nil)
 
-    (setq projectile-git-submodule-command nil)
+    ;; (when (or (executable-find "fd") (executable-find "rg"))
+    ;;   (setq projectile-indexing-method 'alien
+    ;;         projectile-enable-caching t))
+
+    ;; (setq projectile-git-submodule-command nil)
 
     ;; Support Perforce project
     (let ((val (or (getenv "P4CONFIG") ".p4config")))
@@ -33,5 +36,8 @@
 
 (use-package counsel-projectile
   :after (projectile counsel))
+
+(use-package helm-projectile
+  :after (projectile helm))
 
 (provide 'init-projectile)

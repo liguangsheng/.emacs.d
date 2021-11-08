@@ -4,6 +4,13 @@
 
 ;;; Code:
 
+;; function aliases
+(defalias 'my-M-x           'helm-M-x)
+(defalias 'my-switch-buffer 'helm-buffer)
+(defalias 'my-mini          'helm-recentf)
+(defalias 'my-find-file     'helm-find-file)
+(defalias 'my-find-recentf  'helm-recentf)
+
 (with-eval-after-load 'hydra
   (pretty-hydra-define hydra-launcher (:color teal :title "Overview")
     ("Groups"
@@ -38,7 +45,7 @@
 
   (pretty-hydra-define hydra-motions (:color blue :title "Motions")
     ("Jump"
-     (("l" avy-goto-line "goto line")
+     (("l" avy-goto-line   "goto line")
       ("w" avy-goto-word-1 "goto word")
       ("c" avy-goto-char-2 "goto char"))
      "Expand"
@@ -103,30 +110,31 @@
 
   (pretty-hydra-define hydra-projects (:color blue :title "Projects")
     ("project actions"
-     (("p" counsel-projectile "counsel-projectile")
-      ("b" counsel-projectile-switch-to-buffer "project buffers")
-      ("S" counsel-projectile-switch-project "switch project")
-      ("s" counsel-projectile-rg "project search")
-      ("f" counsel-projectile-find-file "find file in project" :exit t)
-      ("d" counsel-projectile-find-dir "find dir in project" :exit t)
+     (("p" helm-projectile "project overview")
+      ("b" helm-projectile-switch-to-buffer "project buffers")
+      ("S" helm-projectile-switch-project "switch project")
+      ("s" helm-projectile-ag "project search")
+      ("f" helm-projectile-find-file "find file in project" :exit t)
+      ("d" helm-projectile-find-dir "find dir in project" :exit t)
       ("i" projectile-invalidate-cache :color blue)
       )))
 
   (pretty-hydra-define hydra-buffers (:hint nil :color teal :title "Buffer Management Commands")
     ("Actions"
-     (("b" counsel-switch-buffer "switch-buffer")
+     (("b" helm-buffers-list "switch-buffer")
       ("d" kill-this-buffer)
       ("O" kill-other-buffers)
       ("m" switch-to-modified-buffer)
       ("s" swiper "search")
-      ("i" counsel-imenu "fuzzy-search-imenu")
+      ("i" helm-imenu "fuzzy-search-imenu")
       ("S" switch-to-scratch))))
 
   (pretty-hydra-define hydra-files (:hint nil :color teal :title "Files Commands")
     ("Find"
-     (("f" counsel-find-file "find-file" :exit t)
-      ("e" open-init-el "open init.el" :exit t)
-      ("r" counsel-recentf "find recentf" :exit t))))
+     (("f" helm-find-files "find files"   :exit t)
+      ("e" open-init-el    "open init.el" :exit t)
+      ("r" helm-recentf    "find recentf" :exit t)
+      )))
 
   (pretty-hydra-define hydra-windows (:hint nil :title "Window Management")
     ("Switch"
@@ -174,24 +182,14 @@
       ("r" lsp-rename "rename"))
      ))
   )
-;; Prefer function aliases
-(defalias 'my-M-x           'counsel-M-x)
-(defalias 'my-switch-buffer 'counsel-switch-buffer)
-(defalias 'my-mini          'counsel-buffer-or-recentf)
-(defalias 'my-find-file     'counsel-find-file)
-(defalias 'my-find-recentf  'counsel-buffer-or-recentf)
-
 ;; Global
-(global-set-key (kbd "<f1> f")	'counsel-describe-function)
-(global-set-key (kbd "<f1> m")	'counsel-describe-map)
-(global-set-key (kbd "<f1> s")	'counsel-describe-symbol)
-(global-set-key (kbd "<f1> v")	'counsel-describe-variable)
+(global-set-key (kbd "<f1>")	'helm-apropos)
 ;; (global-set-key (kbd "<f8>")	'my/treemacs-select-window)
 (global-set-key (kbd "C-`")	'toggle-eshell-project-root)
 (global-set-key (kbd "C-/")	'comment-line)
 (global-set-key (kbd "C-M-l")	'indent-whole-buffer)
 (global-set-key (kbd "C-j")	'ace-window)
-(global-set-key (kbd "C-s")	'swiper-thing-at-point)
+(global-set-key (kbd "C-s")	'helm-swoop)
 (global-set-key (kbd "C-x C-f")	'my-find-file)
 (global-set-key (kbd "C-x b")	'my-mini)
 (global-set-key (kbd "C-x c b")	'ivy-resume)
@@ -203,10 +201,13 @@
 (global-set-key (kbd "C-c l")	'avy-goto-line)
 (global-set-key (kbd "C-h m")   'describe-mode)
 (global-set-key (kbd "C-,")     'hydra-launcher/body)
+(global-set-key (kbd "C-<mouse-1>") 'evil-goto-definition)
 
 ;; Mirror Mode
-(with-eval-after-load 'company
-  (define-key company-active-map (kbd "<tab>") #'counsel-company))
+(eval-after-load 'company
+  '(progn
+     (define-key company-mode-map (kbd "C-:") 'helm-company)
+     (define-key company-active-map (kbd "C-:") 'helm-company)))
 
 ;; Evil
 (with-eval-after-load 'evil-maps

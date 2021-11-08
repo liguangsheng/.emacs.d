@@ -22,8 +22,7 @@
 			      ,(font-spec :family "WenQuanYi Zen Hei" :size 14)
 			      ,(font-spec :family "Microsoft Yahei" :size 14)))
 
-(defconst fallback-fonts '("Roboto Mono:pixelsize=12"
-			   "Fira Code:pixelsize=12"
+(defconst fallback-fonts '("Fira Code:pixelsize=12"
 			   "Source Code Pro:pixelsize=12"
 			   "Droid Sans Mono:pixelsize=12"
 			   "Menlo:size=13"
