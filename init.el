@@ -10,7 +10,6 @@
 ;;; Code:
 
 (require 'init-startup (expand-file-name "lisp/init-startup.el" user-emacs-directory))
-(require 'init-packages)
 
 ;;; Quick Settings:
 
@@ -30,33 +29,39 @@
  perferences/enable-posframe t
  perferences/enable-server   t
 
- line-spacing       0.15
+ line-spacing 0.15
  )
 
-
+(require 'init-packages)
 (require 'init-basic)
 
-;; Initialize UI
+;; ui
 (require 'init-fonts)
 (require 'init-theme)
 (require 'init-icons)
 (require 'init-posframe)
+(require 'init-tabline)
 
+;; modules
+(require 'init-projectile)
 (require 'init-features)
 (require 'init-dired)
+(require 'init-vcs)
 (require 'init-evil)
 (require 'init-hydra)
 (require 'init-treemacs)
-(require 'init-helm)
-(require 'init-company)
-(require 'init-projectile)
+(require 'init-completion)
+
+;; tools
 (require 'init-lsp)
+
+;; keys
 (require 'init-keybindings)
+
+;; languages
 (require 'init-lang)
 
 ;;; Experimental:
-;; (use-package esup)
-;; (message (format "%d packages loaded in %s" (length package-alist) (emacs-init-time)))
 
 ;;; Load custom file:
 (when (and custom-file (file-readable-p custom-file) (load custom-file)))

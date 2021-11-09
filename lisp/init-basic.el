@@ -113,7 +113,7 @@
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 ;; (cua-mode 1)
-(horizontal-scroll-bar-mode -1)
+;; (horizontal-scroll-bar-mode -1)
 (global-auto-revert-mode 1)
 (recentf-mode 1)
 (ignore-errors (savehist-mode 1))

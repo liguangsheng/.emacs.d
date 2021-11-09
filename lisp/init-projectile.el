@@ -3,7 +3,6 @@
 	      ("s-t" . projectile-find-file) ; `cmd-t' or `super-t'
 	      ("C-c p" . projectile-command-map))
 
-  :hook (after-init . projectile-mode)
 
   :init
   (setq projectile-mode-line-prefix ""
@@ -11,6 +10,7 @@
         projectile-use-git-grep t)
 
   :config
+  (projectile-mode +1)
   ;; (when (and (not (executable-find "fd"))
   ;;            (executable-find "rg"))
   ;;   (setq projectile-generic-command
@@ -34,10 +34,5 @@
       (add-to-list 'projectile-project-root-files-bottom-up val)))
   )
 
-(use-package counsel-projectile
-  :after (projectile counsel))
-
-(use-package helm-projectile
-  :after (projectile helm))
 
 (provide 'init-projectile)

@@ -16,6 +16,8 @@
 (when (featurep 'ns)
   (push '(ns-transparent-titlebar . t) default-frame-alist))
 
+(set-language-environment "UTF-8")
+
 ;; 最大化Frame
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 

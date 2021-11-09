@@ -125,12 +125,4 @@
   :config
   (which-key-mode 1))
 
-(use-package diff-hl
-  :config
-  (global-diff-hl-mode))
-
-(use-package git-messenger
-  :init
-  (setq git-messenger:show-detail t))
-
 (provide 'init-features)

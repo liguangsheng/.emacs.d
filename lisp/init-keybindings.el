@@ -5,10 +5,8 @@
 ;;; Code:
 
 ;; function aliases
-(defalias 'my-M-x           'helm-M-x)
 (defalias 'my-switch-buffer 'helm-buffer)
 (defalias 'my-mini          'helm-recentf)
-(defalias 'my-find-file     'helm-find-file)
 (defalias 'my-find-recentf  'helm-recentf)
 
 (with-eval-after-load 'hydra
@@ -133,7 +131,7 @@
 
   (pretty-hydra-define hydra-files (:hint nil :color teal :title "Files Commands")
     ("Find"
-     (("f" helm-find-files "find files"   :exit t)
+     (("f" find-file       "find file"   :exit t)
       ("e" open-init-el    "open init.el" :exit t)
       ("r" helm-recentf    "find recentf" :exit t)
       )))
@@ -171,9 +169,9 @@
       ("m" lsp-ui-imenu "imenu")
       ("x" lsp-execute-code-action "execute action"))
      "Symbol"
-     (("d" lsp-find-declaration "declaration")
-      ("D" lsp-ui-peek-find-definitions "definition")
-      ("R" lsp-ui-peek-find-references "references")
+     (("d" lsp-find-declaration "declaration"        :exit t)
+      ("D" lsp-ui-peek-find-definitions "definition" :exit t)
+      ("R" lsp-ui-peek-find-references "references"  :exit t)
       ("l" lsp-ivy-workspace-symbol "symbol")
       ("L" lsp-ivy-global-workspace-symbol "symbol(global)"))
      ""
@@ -192,11 +190,11 @@
 (global-set-key (kbd "C-M-l")	'indent-whole-buffer)
 (global-set-key (kbd "C-j")	'ace-window)
 (global-set-key (kbd "C-s")	'helm-swoop)
-(global-set-key (kbd "C-x C-f")	'my-find-file)
+(global-set-key (kbd "C-x C-f")	'find-file)
 (global-set-key (kbd "C-x b")	'my-mini)
 (global-set-key (kbd "C-x c b")	'ivy-resume)
-(global-set-key (kbd "M-x")	'my-M-x)
-(global-set-key (kbd "≈")	'my-M-x)
+;; (global-set-key (kbd "M-x")	'M-x)
+;; (global-set-key (kbd "≈")	'M-x)
 (global-set-key (kbd "C-c q r") 'restart-emacs)
 (global-set-key (kbd "C-=")	'er/expand-region)
 (global-set-key (kbd "C-c SPC") 'avy-goto-word-1)
