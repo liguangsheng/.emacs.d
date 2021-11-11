@@ -20,3 +20,5 @@ projects
 eshell/
 .persistent-scratch
 network-security.data
+
+.local/

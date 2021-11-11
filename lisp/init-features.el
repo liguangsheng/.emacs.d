@@ -5,14 +5,6 @@
 (use-package restart-emacs)
 (use-package wgrep)
 
-(use-package gcmh
-  :diminish
-  :init
-  (setq gcmh-idle-delay 5
-	gcmh-verbose t
-	gcmh-high-cons-threshold #x6400000) ;; 100 MB
-  (gcmh-mode 1))
-
 (use-package undo-tree
   :hook (after-init . global-undo-tree-mode)
   :config
@@ -113,16 +105,5 @@
   (yas-global-mode 1))
 
 (use-package flycheck)
-
-(use-package which-key
-  :init
-  (setq which-key-popup-type 'side-window
-		which-key-side-window-location 'bottom
-		which-key-idle-delay 0.4
-		which-key-separator " → "
-		which-key-prefix-prefix "+"
-		which-key-side-window-max-heght 0.25)
-  :config
-  (which-key-mode 1))
 
 (provide 'init-features)

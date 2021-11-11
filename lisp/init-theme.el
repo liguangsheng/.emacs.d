@@ -1,9 +1,3 @@
-;;; init-theme.el -- 主题相关配置
-
-;;; Commentary:
-
-;;; Code:
-
 (use-package doom-themes
   :defer t
   :config
@@ -23,26 +17,26 @@
 
 ;;; Modeline:
 (use-package doom-modeline
-  :hook (after-init . doom-modeline-mode)
-  :config  (setq doom-modeline-height 25
-		 doom-modeline-bar t
-		 doom-modeline-bar-width 10
-		 doom-modeline-hud nil
-		 doom-modeline-window-width-limit fill-column
-		 doom-modeline-project-detection 'project
-		 doom-modeline-buffer-file-name-style 'relative-to-project
-		 doom-modeline-icon (display-graphic-p)
-		 doom-modeline-modal-icon t
-		 doom-modeline-major-mode-icon t
-		 doom-modeline-buffer-state-icon (display-graphic-p)
-		 doom-modeline-buffer-modification-icon t
-		 doom-modeline-number-limit 99
-		 doom-modeline-lsp t
-		 doom-modeline-enable-word-count t
-		 doom-modeline-buffer-encoding t
-		 doom-modeline-indent-info t
-		 doom-modeline-workspace-name t
-		 doom-modeline-env-go-executable "go"))
+  :config  
+  (setq doom-modeline-height 25
+	doom-modeline-bar t
+	doom-modeline-bar-width 10
+	doom-modeline-hud nil
+	doom-modeline-window-width-limit fill-column
+	doom-modeline-project-detection 'project
+	doom-modeline-buffer-file-name-style 'relative-to-project
+	doom-modeline-icon (display-graphic-p)
+	doom-modeline-modal-icon t
+	doom-modeline-major-mode-icon t
+	doom-modeline-buffer-state-icon (display-graphic-p)
+	doom-modeline-buffer-modification-icon t
+	doom-modeline-number-limit 99
+	doom-modeline-lsp t
+	doom-modeline-enable-word-count t
+	doom-modeline-buffer-encoding t
+	doom-modeline-indent-info t
+	doom-modeline-workspace-name t
+	doom-modeline-env-go-executable "go"))
 
 (use-package base16-theme)
 
@@ -50,4 +44,3 @@
 (load-theme perferences/theme t)
 
 (provide 'init-theme)
-;;; init-theme.el ends here

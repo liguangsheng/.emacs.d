@@ -26,7 +26,11 @@
 (use-package helm
   :bind
   ([remap execute-extended-command] . helm-M-x)
-  ([remap find-file]                . helm-find-files))
+  ([remap find-file]                . helm-find-files)
+  ([remap find-dir]                 . dired)
+  ([remap recentf-open-files]       . helm-recentf)
+  ([remap imenu]                    . helm-imenu)
+  )
 
 (use-package helm-company
   :after (helm company))
@@ -40,7 +44,9 @@
 (use-package helm-ag)
 
 (use-package helm-projectile
-  :config (helm-projectile-on))
+  :bind
+  ([remap projectile-switch-project] . helm-projectile-switch-project)
+  :init (helm-projectile-on))
 
 ;;; Vertico
 (use-package vertico

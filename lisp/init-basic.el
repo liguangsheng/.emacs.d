@@ -159,7 +159,13 @@
   (after-init . (lambda () (when (and perferences/enable-server
 				      (not (server-running-p)) (server-start))))))
 
-
+(use-package gcmh
+  :diminish
+  :init
+  (setq gcmh-idle-delay 5
+	gcmh-verbose nil
+	gcmh-high-cons-threshold #x6400000) ;; 100 MB
+  (gcmh-mode 1))
 
 (provide 'init-basic)
 
