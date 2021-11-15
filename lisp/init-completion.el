@@ -22,70 +22,20 @@
 
 (use-package company-tabnine)
 
-;; (use-package smex)
-;; (use-package ido ;;   :init
-;;   (ido-mode 1)
-;;   :config
-;;   (setq ido-enable-flex-matching t)
-;;   (setq ido-default-file-method 'selected-window)
-;;   (setq ido-default-buffer-method 'selected-window)
-
-;;   (global-set-key
-;;    "\M-x"
-;;    (lambda ()
-;;      (interactive)
-;;      (call-interactively
-;;       (intern
-;;        (ido-completing-read
-;;         "M-x "
-;;         (all-completions "" obarray 'commandp))))))
-;;   )
-
-;; (use-package ido-vertical-mode
-;;   :init
-;;   (ido-vertical-mode 1)
-;;   :config
-;;   (setq ido-vertical-show-count t))
-
-;; (use-package ido-sort-mtime
-;;   :hook (ido-mode . ido-sort-mtime-mode))
-
-;; (use-package crm-custom
-;;   :hook (ido-mode . crm-custom-mode))
-
-;; (use-package flx-ido
-;;   :hook (ido-mode . flx-ido-mode))
-
-;; (use-package rg)
-;; (use-package ag)
-
-;; ;;; Helm
-;; (use-package helm
-;;   :bind
-;;   ([remap execute-extended-command] . helm-M-x)
-;;   ([remap find-file]                . helm-find-files)
-;;   ([remap find-dir]                 . dired)
-;;   ;; ([remap recentf-open-files]       . helm-recentf)
-;;   ;; ([remap imenu]                    . helm-imenu)
-;;   )
-
-;; (use-package helm-company
-;;   :after (helm company))
-
-;; (use-package helm-swoop)
-
-;; (use-package helm-rg)
-
-;; (use-package helm-ag)
-
-;; (use-package helm-projectile
-;;   :bind
-;;   ([remap projectile-switch-project] . helm-projectile-switch-project)
-;;   :init (helm-projectile-on))
-
 ;;; Vertico
 
 (use-package vertico
+  :straight 
+  '(vertico
+    :files (:defaults "extensions/*")
+    :includes (vertico-buffer
+               vertico-directory
+               vertico-flat
+               vertico-indexed
+               vertico-mouse
+               vertico-quick
+               vertico-repeat
+               vertico-reverse))
   :init
   (setq vertico-count 20)
   (vertico-mode)
@@ -97,6 +47,68 @@
   (setq completion-styles '(substring orderless))
   )
 
+(use-package vertico-directory
+  :straight nil
+  :bind (:map vertico-map
+              ("RET" . vertico-directory-enter)
+              ("DEL" . vertico-directory-delete-char)
+              ("M-DEL" . vertico-directory-delete-word))
+  ;; Tidy shadowed file names
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+
+(use-package vertico-indexed
+  :straight nil
+  :init (vertico-indexed-mode))
+
+(use-package vertico-mouse
+  :straight nil
+  :init (vertico-mouse-mode))
+
+(use-package vertico-repeat
+  :straight nil
+  :init
+  (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
+  (global-set-key "\M-r" #'vertico-repeat)
+  )
+
+
+(use-package marginalia
+  :bind (("M-A" . marginalia-cycle)
+         :map minibuffer-local-map
+         ("M-b" . marginalia-cycle))
+  :init
+  (marginalia-mode))
+
+(use-package embark
+  :ensure t
+
+  :bind
+  (("C-." . embark-act)         ;; pick some comfortable binding
+   ("M-." . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+  :init
+
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+
+  :config
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :ensure t
+  :after (embark consult)
+  :demand t ; only necessary if you have the hook below
+  ;; if you want to have consult previews as you move around an
+  ;; auto-updating embark collect buffer
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
 (use-package orderless
   :init
   ;; Configure a custom style dispatcher (see the Consult wiki)
@@ -106,22 +118,12 @@
         completion-category-defaults nil
 	completion-category-overrides '((file (styles partial-completion)))))
 
-(use-package vertico-posframe
-  :if perferences/enable-posframe
-  :init
-  (setq vertico-posframe-font perferences/font
-	vertico-posframe-height 20)
-  (vertico-posframe-mode 1))
-
 (use-package consult
   :bind
   ([remap switch-to-buffer]         . consult-buffer)
   ([remap recentf-open-files]       . consult-recent-file)
   ([remap bookmark-jump]            . consult-bookmark)
   ([remap imenu]                    . consult-imenu)
-  :general
-  (my-leader-def
-    "s p" 'consult-ripgrep)
 
   :hook (completion-list-mode . consult-preview-at-point-mode)
 
@@ -139,11 +141,5 @@
           (when-let (project (project-current))
             (car (project-roots project)))))
   )
-
-;; (use-package consult-projectile
-;;   :bind
-;;   ([remap projectile-find-file] . consult-projectile))
-
-;; (use-package marginalia)
 
 (provide 'init-completion)

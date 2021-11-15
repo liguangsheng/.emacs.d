@@ -14,11 +14,11 @@
 ;;; Quick Settings:
 
 (setq-default
- perferences/theme (cond (*windows* (if *gui* 'doom-spacegrey 'nil))
+ perferences/theme (cond (*windows* (if *gui* 'doom-spacegrey 'doom-Isovkem))
 			 (*macos*   (if *gui* 'doom-spacegrey 'doom-spacegrey))
 			 (*linux*   (if *gui* 'doom-spacegrey 'doom-spacegrey)))
 
- perferences/font   "Roboto Mono:pixelsize=14"
+ perferences/font   "Roboto Mono:pixelsize=12"
  perferences/cnfont (font-spec :family "WenQuanYi Micro Hei" :size 14)
 
  perferences/python-executable (cond (*windows* "C:\\Program Files\\Python39\\python.exe")

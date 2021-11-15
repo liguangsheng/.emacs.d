@@ -43,6 +43,7 @@
 (use-package base16-theme)
 
 ;; (add-hook 'emacs-startup-hook (lambda () (load-theme perferences/theme t)))
-(load-theme perferences/theme t)
+(when perferences/theme
+  (load-theme perferences/theme t))
 
 (provide 'init-theme)
