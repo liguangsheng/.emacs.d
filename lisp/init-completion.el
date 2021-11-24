@@ -135,11 +135,15 @@
          consult-async-input-throttle 0.2
          consult-async-input-debounce 0.1)
 
-  :config
-  (setq consult-project-root-function
-        (lambda ()
-          (when-let (project (project-current))
-            (car (project-roots project)))))
-  )
+  (defun consult-ripgrep-project ()
+    (interactive)
+    (consult-ripgrep (consult--project-root) (if (use-region-p) (buffer-substring-no-properties (region-beginning) (region-end)) nil)))
+
+:config
+(setq consult-project-root-function
+      (lambda ()
+        (when-let (project (project-current))
+          (car (project-roots project)))))
+)
 
 (provide 'init-completion)

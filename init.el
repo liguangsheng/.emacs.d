@@ -14,12 +14,9 @@
 ;;; Quick Settings:
 
 (setq-default
- perferences/theme (cond (*windows* (if *gui* 'doom-spacegrey 'doom-Isovkem))
-			 (*macos*   (if *gui* 'doom-spacegrey 'doom-spacegrey))
-			 (*linux*   (if *gui* 'doom-spacegrey 'doom-spacegrey)))
-
- perferences/font   "Roboto Mono:pixelsize=12"
- perferences/cnfont (font-spec :family "WenQuanYi Micro Hei" :size 14)
+ perferences/theme  (if *gui* 'doom-tomorrow-night nil)
+ perferences/font   "Roboto Mono Medium:pixelsize=12"
+ perferences/cnfont (font-spec :family "WenQuanYi Micro Hei" :size 14 :weight 'normal)
 
  perferences/python-executable (cond (*windows* "C:\\Program Files\\Python39\\python.exe")
 				     (t         "python3"))
@@ -46,6 +43,7 @@
 
 ;; editing
 (require 'init-evil)
+(require 'init-search)
 
 ;; modules
 (require 'init-features)

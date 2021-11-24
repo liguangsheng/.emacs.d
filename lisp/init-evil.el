@@ -2,7 +2,8 @@
   :defer nil
   :init
   (setq evil-want-integration t
-	evil-want-keybinding nil)
+	evil-want-keybinding  nil
+	evil-undo-system      'undo-tree)
   (evil-mode 1)
   ;; :hook ((text-mode prog-mode fundamental-mode) . #'evil-mode)
   :config

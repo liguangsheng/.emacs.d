@@ -2,7 +2,6 @@
 (use-package dash)
 (use-package shut-up)
 (use-package restart-emacs)
-(use-package wgrep)
 
 (use-package undo-tree
   :hook (after-init . global-undo-tree-mode)
@@ -25,10 +24,19 @@
     (good-scroll-mode 1)))
 
 ;; 扩展选择区域
-(use-package expand-region)
+(use-package expand-region
+  :bind ("C-=" . er/expand-region))
 
 ;; 跳转
 (use-package avy
+  :bind
+  ("C-:" . avy-goto-char)
+  ("C-;" . avy-goto-char-2)
+  ("M-g f" . avy-goto-line)
+  ("M-g w" . avy-goto-word-1)
+  ("M-g e" . avy-goto-word-0)
+  ("C-c C-j" . avy-resume)
+
   :init
   (avy-setup-default))
 
@@ -77,14 +85,20 @@
 
 (use-package symbol-overlay
   :diminish
+  :hook (prog-mode . symbol-overlay-mode)
   :bind (("M-i" . symbol-overlay-put)
          ("M-n" . symbol-overlay-jump-next)
          ("M-p" . symbol-overlay-jump-prev)
          ("M-N" . symbol-overlay-switch-forward)
          ("M-P" . symbol-overlay-switch-backward)
          ("M-C" . symbol-overlay-remove-all)
-         ([M-f3] . symbol-overlay-remove-all))
+         ([M-f3] . symbol-overlay-remove-all)
+	 :map symbol-overlay-map
+	 ([M-up] . symbol-overlay-jump-prev)
+	 ([M-down] . symbol-overlay-jump-next)
+	 )
   )
+
 
 ;; 将buffer中#000000样式的16进制rgb渲染出染色
 ;; 需要的时候手动开启M-x rainbow-mode

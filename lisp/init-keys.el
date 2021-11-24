@@ -50,8 +50,8 @@
   "c d" '(xref-find-definitions   :wk "Jump to definitions")
   "c D" '(xref-find-references    :wk "Jump to references")
   "c f" '(indent-whole-buffer     :wk "Format buffer")
-  "c i" '(imenu                   :wk "Imenu")
-  "c I" '(lsp-goto-implementation :wk "Jump to implementation")
+  "c I" '(imenu                   :wk "Imenu")
+  "c i" '(lsp-goto-implementation :wk "Jump to implementation")
 
   ;; file
   "f" '(:ignore t :wk "file")
@@ -76,12 +76,12 @@
   "q r" '(restart-emacs :wk "Restart emacs")
 
   ;; search
-  "s" '(:ignore t :wk "search")
-  "s b" '(consult-line       :wk "Search buffer")
-  "s s" '(consult-line       :wk "Search buffer")
-  "s p" '(consult-ripgrep    :wk "Search project")
-  "s g" '(vc-git-grep        :wk "Search by git grep")
-  "s i" '(imenu              :wk "Jump to symbol")
+  "s"   '(:ignore t               :wk "search")
+  "s b" '(consult-line            :wk "Search buffer")
+  "s s" '(consult-line            :wk "Search buffer")
+  "s p" '(consult-ripgrep-project :wk "Search project")
+  "s g" '(vc-git-grep             :wk "Search by git grep")
+  "s i" '(imenu                   :wk "Jump to symbol")
 
   ;; window
   "w" '(:ignore t :wk "window")

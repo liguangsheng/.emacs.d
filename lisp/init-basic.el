@@ -158,12 +158,12 @@
 (use-package server
   :init
   (setq server-socket-dir (expand-dotlocal "server")
-	server-name "server")
+	server-name       "server")
   :commands
   (server-running-p server-start)
-  ;; :config
-  ;; (after-init . (lambda () (when (and perferences/enable-server
-  ;; 				      (not (server-running-p)) (server-start)))))
+  :hook
+  (after-init . (lambda () (when (and perferences/enable-server
+				      (not (server-running-p)) (server-start)))))
   )
 
 (use-package gcmh

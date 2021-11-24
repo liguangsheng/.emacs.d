@@ -252,7 +252,7 @@
   :mode (("WORKSPACE\\'" . bazel-mode)
 	 ("BUILD\\'"     . bazel-mode)))
 
-(use-package graphql-mode  :defer t)
+(use-package graphql-mode)
 
 (use-package protobuf-mode :defer t)
 
