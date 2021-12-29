@@ -1,4 +1,4 @@
-(defvar perferences/enable-icons *gui*)
+(defvar preferences/enable-icons *gui*)
 
 (use-package all-the-icons
   :defer nil)

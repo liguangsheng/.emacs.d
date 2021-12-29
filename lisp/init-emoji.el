@@ -1,4 +1,3 @@
-;; emoji
 (use-package emojify
   :init
   (setq emojify-display-style 'image)

@@ -1,4 +1,4 @@
-;;; init-fonts.el -- �����������
+;;; init-fonts.el 
 
 ;;; Commentary:
 ;;
@@ -65,14 +65,17 @@
   (interactive)
   (progn
     (setup-unicode-font)
-    (setup-font   perferences/font)
-    (setup-cnfont perferences/cnfont)
+    (setup-font   preferences/font)
+    (setup-cnfont preferences/cnfont)
     ))
 
 (when *gui* (setup-fonts))
 ;; (when *gui* (add-hook 'after-init-hook #'setup-fonts))
 
+
 ;; Font Example:
+;; | 你好  | 世界  |
+;; | Hello | World |
 ;; 千山鸟飞绝，万径人踪灭。
 ;; 孤舟蓑笠翁，独钓寒江雪。
 ;; abcdefghijklmnopqrstuvwxyz0123456789

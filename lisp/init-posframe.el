@@ -1,6 +1,6 @@
-(defvar perferences/enable-posframe t)
+(defvar preferences/enable-posframe t)
 
 (use-package posframe
-  :if perferences/enable-posframe)
+  :if preferences/enable-posframe)
 
 (provide 'init-posframe)

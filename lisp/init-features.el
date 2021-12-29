@@ -31,14 +31,17 @@
 (use-package avy
   :bind
   ("C-:" . avy-goto-char)
-  ("C-;" . avy-goto-char-2)
+  ("C-'" . avy-goto-char-2)
   ("M-g f" . avy-goto-line)
   ("M-g w" . avy-goto-word-1)
   ("M-g e" . avy-goto-word-0)
   ("C-c C-j" . avy-resume)
 
   :init
-  (avy-setup-default))
+  (avy-setup-default)
+  (my-leader-def
+    "'" 'avy-goto-char-2)
+  )
 
 ;; 彩虹分隔符
 (use-package rainbow-delimiters
@@ -74,10 +77,10 @@
   (persistent-scratch-setup-default)
   (persistent-scratch-autosave-mode 1))
 
-(use-package exec-path-from-shell
-  :config
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
+;; (use-package exec-path-from-shell
+;;   :config
+;;   (when (memq window-system '(mac ns))
+;;     (exec-path-from-shell-initialize)))
 
 (use-package vi-tilde-fringe
   :init
@@ -113,5 +116,15 @@
   (yas-global-mode 1))
 
 (use-package flycheck)
+
+(use-package format-all
+  :hook (prog-mode . format-all-mode)
+  :bind ([remap format-buffer] . format-all-buffer))
+
+(use-package zoom-window
+  :init
+  (my-leader-def
+    "w m" 'zoom-window-zoom
+    "w n" 'zoom-window-next))
 
 (provide 'init-features)

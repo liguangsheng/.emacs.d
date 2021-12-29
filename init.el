@@ -14,36 +14,49 @@
 ;;; Quick Settings:
 
 (setq-default
- perferences/theme  (if *gui* 'doom-tomorrow-night nil)
- perferences/font   "Roboto Mono Medium:pixelsize=12"
- perferences/cnfont (font-spec :family "WenQuanYi Micro Hei" :size 14 :weight 'normal)
+ preferences/theme  (if *gui* 'doom-one-light nil)
+ preferences/font   "JetBrainsMonoMedium Nerd Font:pixelsize=12:weight=medium"
+ preferences/cnfont (font-spec :family "AR PL UKai CN" :size 14)
+ ;; preferences/cnfont (font-spec :family "WenQuanYi Micro Hei" :size 14)
 
- perferences/python-executable (cond (*windows* "C:\\Program Files\\Python39\\python.exe")
+ preferences/python-executable (cond (*windows* "C:\\Program Files\\Python39\\python.exe")
 				     (t         "python3"))
 
- perferences/enable-icons    *gui*
- perferences/enable-tabnine  t
- perferences/enable-posframe nil
- perferences/enable-server   t
+ preferences/enable-icons    *gui*
+ preferences/enable-tabnine  t
+ preferences/enable-posframe nil
+ preferences/enable-server   t
+
+ line-spacing 0.3
  )
 
 ;; core
-(require 'init-packages)
+;; (require 'init-elpa)
+(require 'init-straight)
 (require 'init-basic)
 (require 'init-fonts)
 (require 'init-theme)
+(require 'init-keys)
 (require 'init-projectile)
 
 ;; ui
 (require 'init-icons)
 (require 'init-posframe)
-(require 'init-tabline)
-(require 'init-keys)
+;; (require 'init-tabline)
 (require 'init-emoji)
+
+;; languages
+(require 'init-go)
+(require 'init-python)
+(require 'init-rust)
+(require 'init-org)
+(require 'init-markdown)
+(require 'init-langs)
 
 ;; editing
 (require 'init-evil)
 (require 'init-search)
+(require 'init-editconfig)
 
 ;; modules
 (require 'init-features)
@@ -52,16 +65,13 @@
 (require 'init-hydra)
 (require 'init-treemacs)
 (require 'init-completion)
+;; (require 'init-company)
+(require 'init-corfu)
 
 ;; tools
-(require 'init-lsp)
-(require 'init-editconfig)
-
-;; keys
-;; (require 'init-keybindings)
-
-;; languages
-(require 'init-lang)
+;; (require 'init-lsp)
+(require 'init-lsp-bridge)
+;; (require 'init-tags)
 
 ;;; Experimental:
 

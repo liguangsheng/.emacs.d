@@ -1,4 +1,5 @@
 (use-package centaur-tabs
+  :disabled
   :hook
   (dired-mode . centaur-tabs-local-mode)
   (after-init . centaur-tabs-mode)

@@ -6,7 +6,6 @@
 
 (defvar my-localleader-alt-key "C-, m")
 
-
 (use-package which-key
   :init
   (setq which-key-popup-type 'side-window
@@ -19,9 +18,9 @@
   (which-key-mode 1)) 
 
 (use-package which-key-posframe
-  :if perferences/enable-posframe
+  :if preferences/enable-posframe
   :init
-  (setq which-key-posframe-font perferences/font)
+  (setq which-key-posframe-font preferences/font)
   (which-key-posframe-mode 1))
 
 (use-package general)
@@ -29,7 +28,8 @@
 (general-create-definer my-leader-def
   :states '(normal insert visual emacs)
   :prefix my-leader-key
-  :non-normal-prefix my-leader-alt-key)
+  :non-normal-prefix my-leader-alt-key
+  :global-prefix my-leader-alt-key)
 
 (my-leader-def
   "SPC" '(projectile-find-file     :wk "Find file in project")
@@ -47,11 +47,11 @@
 
   ;; code
   "c" '(:ignore t :wk "code")
-  "c d" '(xref-find-definitions   :wk "Jump to definitions")
-  "c D" '(xref-find-references    :wk "Jump to references")
-  "c f" '(indent-whole-buffer     :wk "Format buffer")
-  "c I" '(imenu                   :wk "Imenu")
-  "c i" '(lsp-goto-implementation :wk "Jump to implementation")
+  "c d" 'xref-find-definitions
+  "c D" 'xref-find-definitions-other-window
+  "c r" 'xref-find-references   
+  "c f" 'format-buffer
+  "c I" 'imenu
 
   ;; file
   "f" '(:ignore t :wk "file")
@@ -91,6 +91,16 @@
   "w d" 'delete-window
   "w D" 'ace-delete-window
   "w o" 'delete-other-windows
+  "w j" 'next-window-any-frame
+  "w k" 'previous-window-any-frame
+  "w m" 'toggle-one-window
   )
+
+(general-define-key
+ "M-j" 'next-window-any-frame
+ "M-k" 'previous-window-any-frame
+ "M-[" 'xref-pop-marker-stack
+ "M-]" 'xref-find-definitions
+ )
 
 (provide 'init-keys)

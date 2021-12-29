@@ -1,4 +1,5 @@
 (use-package projectile
+  :commands projectile-project-root
   :bind (:map projectile-mode-map
 	      ("s-t"   . projectile-find-file) ; `cmd-t' or `super-t'
 	      ("C-c p" . projectile-command-map))

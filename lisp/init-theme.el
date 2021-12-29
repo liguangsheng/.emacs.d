@@ -40,10 +40,17 @@
   (doom-modeline-mode 1)
   )
 
-(use-package base16-theme)
+;; (use-package uwu-theme
+;;   :straight (uwu-theme :type git :host github :repo "kborling/uwu-theme.el"))
 
-;; (add-hook 'emacs-startup-hook (lambda () (load-theme perferences/theme t)))
-(when perferences/theme
-  (load-theme perferences/theme t))
+(use-package kaolin-themes)
+
+(use-package modus-themes)
+
+
+;; (add-hook 'emacs-startup-hook (lambda () (load-theme preferences/theme t)))
+(when preferences/theme
+  (load-theme preferences/theme t))
+;; (set-background-color "#1F2227")
 
 (provide 'init-theme)

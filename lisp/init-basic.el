@@ -1,12 +1,12 @@
-(defvaralias 'perferences/python-executable 'python-shell-interpreter)
+(defvaralias 'preferences/python-executable 'python-shell-interpreter)
 
-(defvar perferences/enable-server nil)
+(defvar preferences/enable-server nil)
 
 (defun copy-file-path ()
   (interactive "P")
   (kill-new (file-relative-name  (buffer-file-name) (projectile-project-root))))
 
-(defun indent-whole-buffer ()
+(defun format-buffer ()
   (interactive)
   (save-excursion
     (indent-region (point-min) (point-max) nil)))
@@ -89,7 +89,7 @@
  compilation-ask-about-save               nil
  compilation-scroll-output                t
  create-lockfiles                         nil
- custom-file                              "~/custom.el"
+ custom-file                              (expand-dotlocal "custom.el")
  debug-on-error                           t
  delete-old-versions                      t
  font-lock-maximum-size                   5000000
@@ -104,9 +104,12 @@
  version-control                          t
  visible-bell                             0
  inhibit-compacting-font-caches           t
+ scroll-conservatively                    1000
+ scroll-margin                            10
+ help-window-select                       t
  )
 
-;; Backup 
+;; Backup
 (setq  make-backup-files nil
        backup-inhibited  t
        auto-save-default nil)
@@ -115,7 +118,8 @@
 ;; (cua-mode 1)
 ;; (horizontal-scroll-bar-mode -1)
 (global-auto-revert-mode 1)
-(setq recentf-save-file (expand-dotlocal "recentf"))
+(setq recentf-save-file (expand-dotlocal "recentf")
+      recentf-max-saved-items 1000)
 (recentf-mode 1)
 (setq savehist-file (expand-dotlocal "savehist"))
 (ignore-errors (savehist-mode 1))
@@ -162,7 +166,7 @@
   :commands
   (server-running-p server-start)
   :hook
-  (after-init . (lambda () (when (and perferences/enable-server
+  (after-init . (lambda () (when (and preferences/enable-server
 				      (not (server-running-p)) (server-start)))))
   )
 
@@ -174,5 +178,26 @@
 	gcmh-high-cons-threshold #x6400000) ;; 100 MB
   (gcmh-mode 1))
 
-(provide 'init-basic)
+(defvar toggle-one-window-window-configuration nil
+  "The window configuration use for `toggle-one-window'.")
 
+(defun toggle-one-window ()
+  "Toggle between window layout and one window."
+  (interactive)
+  (if (equal (length (cl-remove-if #'window-dedicated-p (window-list))) 1)
+      (if toggle-one-window-window-configuration
+	  (progn
+	    (set-window-configuration toggle-one-window-window-configuration)
+	    (setq toggle-one-window-window-configuration nil))
+	(message "No other windows exist."))
+    (setq toggle-one-window-window-configuration (current-window-configuration))
+    (delete-other-windows)))
+
+(defun add-hooks (hooks functions)
+  (let ((hooks (ensure-list hooks))
+	(functions (if (functionp functions) (list functions) functions)))
+    (dolist (hook hooks)
+      (dolist (func functions)
+	(add-hook hook func)))))
+
+(provide 'init-basic)

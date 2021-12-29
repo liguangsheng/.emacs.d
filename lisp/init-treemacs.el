@@ -43,10 +43,11 @@
      treemacs-silent-refresh                nil
      treemacs-sorting                       'alphabetic-asc
      treemacs-space-between-root-nodes      t
+     treemacs-width-is-initially-locked     nil
      treemacs-tag-follow-cleanup            t
      treemacs-tag-follow-delay              1.5
      treemacs-user-mode-line-format         nil
-     treemacs-width                         35)
+     treemacs-width                         40)
     
     ;; The default width and height of the icons is 22 pixels. If you are
     ;; using a Hi-DPI display, uncomment this to double the icon size.
