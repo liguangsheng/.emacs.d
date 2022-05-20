@@ -105,8 +105,7 @@
   :hook (kill-emacs . tabnine-capf-kill-process)
   :init
   (add-hooks (list 'graphql-mode-hook
-		   'protobuf-mode-hook
-		   'go-mode-hook)
+		   'protobuf-mode-hook)
 	     (lambda () (add-to-list 'completion-at-point-functions #'tabnine-completion-at-point))))
 
 (provide 'init-corfu)

@@ -22,10 +22,6 @@
     )
   )
 
-(use-package flycheck-golangci-lint
-  :after flycheck
-  :hook (go-mode . flycheck-golangci-lint-setup))
-
 (use-package go-tag
   :bind (:map go-mode-map
 	      ("C-c t" . go-tag-add)

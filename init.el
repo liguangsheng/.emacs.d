@@ -58,20 +58,20 @@
 (require 'init-search)
 (require 'init-editconfig)
 
-;; modules
-(require 'init-features)
+;; tools
+(require 'init-completion)
+;; (require 'init-company)
+;; (require 'init-lsp)
+(require 'init-corfu)
+(require 'init-lsp-bridge)
+;; (require 'init-tags)
+(require 'init-flycheck)
 (require 'init-dired)
 (require 'init-vcs)
 (require 'init-hydra)
 (require 'init-treemacs)
-(require 'init-completion)
-;; (require 'init-company)
-(require 'init-corfu)
-
-;; tools
-;; (require 'init-lsp)
-(require 'init-lsp-bridge)
-;; (require 'init-tags)
+(require 'init-tree-sitter)
+(require 'init-features)
 
 ;;; Experimental:
 

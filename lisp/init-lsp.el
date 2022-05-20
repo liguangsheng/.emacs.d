@@ -9,17 +9,12 @@
 		       ;;  (add-hook 'before-save-hook #'lsp-organize-imports t t))
 		       ))
 	 (lsp-managed-mode-hook . 'lsp-diagnostics-modeline-mode)
-	 (go-mode . lsp-deferred)
 	 )
 
   :bind (:map lsp-mode-map
 	      ("C-c C-d" . lsp-describe-thing-at-point)
 	      ([remap xref-find-definitions] . lsp-find-definition)
 	      ([remap xref-find-references] . lsp-find-references))
-
-  :bind (("M-b" . xref-find-definitions)
-	 ("M-]" . xref-find-definitions)
-	 ("M-[" . xref-pop-marker-stack))
 
   :init
   (setq lsp-auto-guess-root t       ; Detect project root
@@ -77,5 +72,13 @@
 ;; 	    (lambda ()
 ;; 	      (setq lsp-ui-doc-border (face-foreground 'font-lock-comment-face))
 ;; 	      (set-face-background 'lsp-ui-doc-background (face-background 'tooltip)))))
+
+(setq lsp-rust-server 'rust-analyzer)
+
+(add-hooks #'lsp-deferred (list 'python-mode-hook
+				'go-mode-hook
+				'rust-mode-hook
+				'lua-mode-hook
+				'powershell-mode-hook))
 
 (provide 'init-lsp)

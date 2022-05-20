@@ -115,8 +115,6 @@
   ;; (withf 'shut-up (shut-up (yas-global-mode 1))))
   (yas-global-mode 1))
 
-(use-package flycheck)
-
 (use-package format-all
   :hook (prog-mode . format-all-mode)
   :bind ([remap format-buffer] . format-all-buffer))

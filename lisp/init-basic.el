@@ -200,4 +200,22 @@
       (dolist (func functions)
 	(add-hook hook func)))))
 
+(use-package so-long
+  :ensure nil
+  :config (global-so-long-mode 1))
+
+(use-package whitespace
+  :ensure nil
+  :hook ((prog-mode markdown-mode conf-mode) . whitespace-mode)
+  :config
+  (setq whitespace-style '(face             ; visualize things below:
+			   ;; empty            ; empty lines at beginning/end of buffer
+			   ;; lines-tail       ; lines go beyond `fill-column'
+			   space-before-tab ; spaces before tab
+			   trailing         ; trailing blanks
+			   tabs             ; tabs (show by face)
+			   ;; tab-mark         ; tabs (show by symbol))))
+			   )))
+
 (provide 'init-basic)
+

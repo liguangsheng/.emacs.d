@@ -17,7 +17,6 @@
   (vertico-mode)
   :config
   (define-key vertico-map "?" #'minibuffer-completion-help)
-  (define-key vertico-map (kbd "M-RET") #'minibuffer-force-complete-and-exit)
   (define-key vertico-map (kbd "M-TAB") #'minibuffer-complete)
 
   (setq completion-styles '(substring orderless))

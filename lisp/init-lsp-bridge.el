@@ -3,7 +3,10 @@
 	      :type git
 	      :host github
 	      :repo "manateelazycat/lsp-bridge"
-	      :files (:defaults "*.py"))
+	      :files (:defaults "*"))
+
+  :custom
+  (lsp-bridge-enable-log t)
 
   :init
   (require 'lsp-bridge)             ;; load lsp-bridge
@@ -79,6 +82,8 @@
 		     (local-set-key [remap xref-find-definitions-other-window] #'lsp-bridge-find-def-other-window)
 		     (local-set-key [remap xref-find-references]  #'lsp-bridge-find-references)))
 
-  (evil-set-initial-state 'lsp-bridge-ref-mode 'insert))
+  (evil-set-initial-state 'lsp-bridge-ref-mode 'insert)
+  ;; (define-key lsp-bridge-ref-mode-map (kbd "M-RET") #'lsp-bridge-ref-open-file)
+  )
 
 (provide 'init-lsp-bridge)
