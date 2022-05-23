@@ -43,7 +43,6 @@
 (require 'init-icons)
 (require 'init-posframe)
 ;; (require 'init-tabline)
-(require 'init-emoji)
 
 ;; languages
 (require 'init-go)
