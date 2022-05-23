@@ -193,6 +193,13 @@
     (setq toggle-one-window-window-configuration (current-window-configuration))
     (delete-other-windows)))
 
+;; Windows下的版本可能没有这个函数，兼容一下
+(unless (functionp 'ensure-list)
+  (defun ensure-list (object)
+    (if (listp object)
+	object
+      (list object))))
+
 (defun add-hooks (hooks functions)
   (let ((hooks (ensure-list hooks))
 	(functions (if (functionp functions) (list functions) functions)))
@@ -218,4 +225,3 @@
 			   )))
 
 (provide 'init-basic)
-

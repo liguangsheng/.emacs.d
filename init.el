@@ -59,10 +59,10 @@
 
 ;; tools
 (require 'init-completion)
-;; (require 'init-company)
-;; (require 'init-lsp)
-(require 'init-corfu)
-(require 'init-lsp-bridge)
+(require 'init-company)
+(require 'init-lsp)
+;; (require 'init-corfu)
+;; (require 'init-lsp-bridge)
 ;; (require 'init-tags)
 (require 'init-flycheck)
 (require 'init-dired)

@@ -34,6 +34,8 @@
 	lsp-enable-on-type-formatting nil
 	lsp-diagnostics-modeline-scope :project
 	)
+
+  (my-leader-def "c R" 'lsp-rename)
   )
 (use-package lsp-treemacs
   :requires (lsp treemacs))
