@@ -69,7 +69,7 @@
 (require 'init-vcs)
 (require 'init-hydra)
 (require 'init-treemacs)
-(require 'init-tree-sitter)
+;; (require 'init-tree-sitter)
 (require 'init-features)
 
 ;;; Experimental:

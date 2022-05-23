@@ -1,10 +1,10 @@
 (use-package flycheck
   :init
-  (add-hooks #'flycheck-mode
-	     (list 'go-mode-hook
+  (add-hooks (list 'go-mode-hook
 		   'rust-mode-hook
 		   'python-mode-hook
-		   'c-mode-hook)))
+		   'c-mode-hook)
+	     #'flycheck-mode))
 
 (use-package flycheck-golangci-lint
   :after flycheck

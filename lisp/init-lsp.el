@@ -1,6 +1,6 @@
 (use-package lsp-mode
   :diminish lsp-mode
-    :hook ((lsp-mode . (lambda ()
+  :hook ((lsp-mode . (lambda ()
 		       ;; Integrate `which-key'
 		       (lsp-enable-which-key-integration)
 
@@ -77,10 +77,11 @@
 
 (setq lsp-rust-server 'rust-analyzer)
 
-(add-hooks #'lsp-deferred (list 'python-mode-hook
-				'go-mode-hook
-				'rust-mode-hook
-				'lua-mode-hook
-				'powershell-mode-hook))
+(add-hooks (list 'python-mode-hook
+		 'go-mode-hook
+		 'rust-mode-hook
+		 'lua-mode-hook
+		 'powershell-mode-hook)
+	   #'lsp-deferred)
 
 (provide 'init-lsp)
