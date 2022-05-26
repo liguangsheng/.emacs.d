@@ -17,6 +17,7 @@
 	      ([remap xref-find-references] . lsp-find-references))
 
   :init
+  (my-leader-def "ci" #'lsp-find-implementation)
   (setq lsp-auto-guess-root t       ; Detect project root
 	lsp-inhibit-message t
 	lsp-message-project-root-warning t

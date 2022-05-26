@@ -10,7 +10,7 @@
 (setq frame-inhibit-implied-resize t)
 
 ;; Faster to disable these here (before they've been initialized)
-(push '(menu-bar-lines . 0) default-frame-alist) 
+(push '(menu-bar-lines . 0) default-frame-alist)
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
 (when (featurep 'ns)
@@ -19,7 +19,7 @@
 (set-language-environment "UTF-8")
 
 ;; (add-to-list 'initial-frame-alist '(fullscreen . maximized))
-;; (add-to-list 'default-frame-alist '(background-color . "#1f2227"))
+(add-to-list 'default-frame-alist '(background-color . "#282a36"))
 
 ;; 设置字体
 ;; (setq-default default-text-properties '(line-spacing 0.0 line-height 19))

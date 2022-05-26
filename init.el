@@ -14,7 +14,7 @@
 ;;; Quick Settings:
 
 (setq-default
- preferences/theme  (if *gui* 'doom-one-light nil)
+ preferences/theme  (if *gui* 'doom-dracula nil)
  preferences/font   "JetBrainsMonoMedium Nerd Font:pixelsize=12:weight=medium"
  preferences/cnfont (font-spec :family "AR PL UKai CN" :size 14)
  ;; preferences/cnfont (font-spec :family "WenQuanYi Micro Hei" :size 14)
@@ -63,7 +63,7 @@
 (require 'init-lsp)
 ;; (require 'init-corfu)
 ;; (require 'init-lsp-bridge)
-;; (require 'init-tags)
+(require 'init-tags)
 (require 'init-flycheck)
 (require 'init-dired)
 (require 'init-vcs)
