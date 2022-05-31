@@ -73,12 +73,52 @@
   (declare (indent 1) (debug t))
   `(when (fboundp ,func) ,@body))
 
+(defun add-hooks (hooks functions)
+  (let ((hooks (ensure-list hooks))
+	(functions (if (functionp functions) (list functions) functions)))
+    (dolist (hook hooks)
+      (dolist (func functions)
+	(add-hook hook func)))))
 
 (when (< emacs-major-version 27)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
+
+(use-package no-littering
+  :init
+  (require 'no-littering))
+
+(use-package so-long
+  :config (global-so-long-mode 1))
+
+(use-package whitespace
+  :hook ((prog-mode markdown-mode conf-mode) . whitespace-mode)
+  :config
+  (setq whitespace-style '(face             ; visualize things below:
+			   ;; empty            ; empty lines at beginning/end of buffer
+			   ;; lines-tail       ; lines go beyond `fill-column'
+			   space-before-tab ; spaces before tab
+			   trailing         ; trailing blanks
+			   tabs             ; tabs (show by face)
+			   ;; tab-mark         ; tabs (show by symbol))))
+			   )))
+
+(use-package server
+  :commands
+  (server-running-p server-start)
+  :hook
+  (after-init . (lambda () (when (and preferences/enable-server
+				      (not (server-running-p)) (server-start))))))
+
+(use-package gcmh
+  :diminish
+  :init
+  (setq gcmh-idle-delay 5
+	gcmh-verbose nil
+	gcmh-high-cons-threshold #x6400000) ;; 100 MB
+  (gcmh-mode 1))
 
 ;; Better variables
 (setq
@@ -89,7 +129,6 @@
  compilation-ask-about-save               nil
  compilation-scroll-output                t
  create-lockfiles                         nil
- custom-file                              (expand-dotlocal "custom.el")
  debug-on-error                           t
  delete-old-versions                      t
  font-lock-maximum-size                   5000000
@@ -118,12 +157,9 @@
 ;; (cua-mode 1)
 ;; (horizontal-scroll-bar-mode -1)
 (global-auto-revert-mode 1)
-(setq recentf-save-file (expand-dotlocal "recentf")
-      recentf-max-saved-items 1000)
+(setq recentf-max-saved-items 1000)
 (recentf-mode 1)
-(setq savehist-file (expand-dotlocal "savehist"))
 (ignore-errors (savehist-mode 1))
-(setq save-place-file (expand-dotlocal "places"))
 (save-place-mode 1)
 (show-paren-mode 1)
 (delete-selection-mode 1)
@@ -159,69 +195,28 @@
   (set-clipboard-coding-system 'utf-16-le))
 
 
-(use-package server
-  :init
-  (setq server-socket-dir (expand-dotlocal "server")
-	server-name       "server")
-  :commands
-  (server-running-p server-start)
-  :hook
-  (after-init . (lambda () (when (and preferences/enable-server
-				      (not (server-running-p)) (server-start)))))
-  )
+;; (defvar toggle-one-window-window-configuration nil
+;;   "The window configuration use for `toggle-one-window'.")
 
-(use-package gcmh
-  :diminish
-  :init
-  (setq gcmh-idle-delay 5
-	gcmh-verbose nil
-	gcmh-high-cons-threshold #x6400000) ;; 100 MB
-  (gcmh-mode 1))
-
-(defvar toggle-one-window-window-configuration nil
-  "The window configuration use for `toggle-one-window'.")
-
-(defun toggle-one-window ()
-  "Toggle between window layout and one window."
-  (interactive)
-  (if (equal (length (cl-remove-if #'window-dedicated-p (window-list))) 1)
-      (if toggle-one-window-window-configuration
-	  (progn
-	    (set-window-configuration toggle-one-window-window-configuration)
-	    (setq toggle-one-window-window-configuration nil))
-	(message "No other windows exist."))
-    (setq toggle-one-window-window-configuration (current-window-configuration))
-    (delete-other-windows)))
+;; (defun toggle-one-window ()
+;;   "Toggle between window layout and one window."
+;;   (interactive)
+;;   (if (equal (length (cl-remove-if #'window-dedicated-p (window-list))) 1)
+;;       (if toggle-one-window-window-configuration
+;; 	  (progn
+;; 	    (set-window-configuration toggle-one-window-window-configuration)
+;; 	    (setq toggle-one-window-window-configuration nil))
+;; 	(message "No other windows exist."))
+;;     (setq toggle-one-window-window-configuration (current-window-configuration))
+;;     (delete-other-windows)))
 
 ;; Windows下的版本可能没有这个函数，兼容一下
-(unless (functionp 'ensure-list)
-  (defun ensure-list (object)
-    (if (listp object)
-	object
-      (list object))))
+;; (unless (functionp 'ensure-list)
+;;   (defun ensure-list (object)
+;;     (if (listp object)
+;; 	object
+;;       (list object))))
 
-(defun add-hooks (hooks functions)
-  (let ((hooks (ensure-list hooks))
-	(functions (if (functionp functions) (list functions) functions)))
-    (dolist (hook hooks)
-      (dolist (func functions)
-	(add-hook hook func)))))
 
-(use-package so-long
-  :ensure nil
-  :config (global-so-long-mode 1))
-
-(use-package whitespace
-  :ensure nil
-  :hook ((prog-mode markdown-mode conf-mode) . whitespace-mode)
-  :config
-  (setq whitespace-style '(face             ; visualize things below:
-			   ;; empty            ; empty lines at beginning/end of buffer
-			   ;; lines-tail       ; lines go beyond `fill-column'
-			   space-before-tab ; spaces before tab
-			   trailing         ; trailing blanks
-			   tabs             ; tabs (show by face)
-			   ;; tab-mark         ; tabs (show by symbol))))
-			   )))
 
 (provide 'init-basic)

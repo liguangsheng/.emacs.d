@@ -1,4 +1,3 @@
-
 ;; Speed up startup
 (setq auto-mode-case-fold nil)
 
@@ -21,8 +20,17 @@
   (expand-file-name "site-lisp/" user-emacs-directory)
   "Path to .emacs.d/site-lisp directory.")
 
-(defconst user-emacs-dotlocal-directory
-  (expand-file-name ".local/" user-emacs-directory))
+(defconst user-emacs-etc-directory
+  (expand-file-name "etc/" user-emacs-directory))
+
+(defconst user-emacs-var-directory
+  (expand-file-name "var/" user-emacs-directory))
+
+(defun expand-user-etc (path)
+  (expand-file-name path user-emacs-etc-directory))
+
+(defun expand-user-var (path)
+  (expand-file-name path user-emacs-var-directory))
 
 ;; Add dir to load-path
 (add-to-list 'load-path user-emacs-lisp-directory)
@@ -39,8 +47,5 @@
 (defconst *emacs26+* (>= emacs-major-version 26))
 (defconst *emacs27+* (>= emacs-major-version 27))
 (defconst *emacs28+* (>= emacs-major-version 28))
-
-(defun expand-dotlocal (path)
-  (expand-file-name path user-emacs-dotlocal-directory))
 
 (provide 'init-startup)

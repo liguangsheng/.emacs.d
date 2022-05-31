@@ -47,10 +47,7 @@
 
 (use-package modus-themes)
 
-
 ;; (add-hook 'emacs-startup-hook (lambda () (load-theme preferences/theme t)))
-(when preferences/theme
-  (load-theme preferences/theme t))
-;; (set-background-color "#1F2227")
+(load-theme preferences/theme t)
 
 (provide 'init-theme)

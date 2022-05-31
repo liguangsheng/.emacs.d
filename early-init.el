@@ -19,7 +19,7 @@
 (set-language-environment "UTF-8")
 
 ;; (add-to-list 'initial-frame-alist '(fullscreen . maximized))
-(add-to-list 'default-frame-alist '(background-color . "#282a36"))
+;; (add-to-list 'default-frame-alist '(background-color . "#282a36"))
 
 ;; 设置字体
 ;; (setq-default default-text-properties '(line-spacing 0.0 line-height 19))

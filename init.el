@@ -22,9 +22,6 @@
  preferences/python-executable (cond (*windows* "C:\\Program Files\\Python39\\python.exe")
 				     (t         "python3"))
 
- preferences/enable-icons    *gui*
- preferences/enable-tabnine  t
- preferences/enable-posframe nil
  preferences/enable-server   t
 
  line-spacing 0.3
@@ -42,7 +39,7 @@
 ;; ui
 (require 'init-icons)
 (require 'init-posframe)
-;; (require 'init-tabline)
+(require 'init-tabline)
 
 ;; languages
 (require 'init-go)
@@ -59,10 +56,10 @@
 
 ;; tools
 (require 'init-completion)
-(require 'init-company)
-(require 'init-lsp)
-;; (require 'init-corfu)
-;; (require 'init-lsp-bridge)
+;; (require 'init-company)
+;; (require 'init-lsp)
+(require 'init-corfu)
+(require 'init-lsp-bridge)
 (require 'init-tags)
 (require 'init-flycheck)
 (require 'init-dired)

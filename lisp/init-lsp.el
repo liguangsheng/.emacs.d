@@ -85,4 +85,9 @@
 		 'powershell-mode-hook)
 	   #'lsp-deferred)
 
+(use-package lsp-pyright
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp))))  ; or lsp-deferred
+
 (provide 'init-lsp)

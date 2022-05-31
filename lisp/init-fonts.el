@@ -31,9 +31,6 @@
 			   "Courier New:size=13"
 			   "monospace:size=13"))
 
-(defun must-list (v)
-  (if (listp v) v (list v)))
-
 (defun font-installed-p (font)
   "Check if font is available."
   (cond ((stringp font) (find-font (font-spec :name font)))
@@ -41,13 +38,13 @@
 	(t nil)))
 
 (defun setup-unicode-font (&optional font)
-  (cl-loop for font-item in (append (must-list font) fallback-unicode-fonts)
+  (cl-loop for font-item in (append (ensure-list font) fallback-unicode-fonts)
 	   when (font-installed-p font-item)
            return (set-fontset-font t 'unicode font-item nil 'prepend)))
 
 
 (defun setup-cnfont (&optional font)
-  (cl-loop for font-item in (append (must-list font) fallback-cn-fonts)
+  (cl-loop for font-item in (append (ensure-list font) fallback-cn-fonts)
 	   when (font-installed-p font-item)
 	   do (cl-loop for charset in cjk-charsets
 		       do (set-fontset-font t charset font-item))
@@ -58,6 +55,7 @@
 	   ;; when (font-installed-p font-item)
 	   do (progn
 		(set-frame-font font-item)
+		(add-to-list 'default-frame-alist `(font . ,font-item))
 		)
 	   return font-item))
 

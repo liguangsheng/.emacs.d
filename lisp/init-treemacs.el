@@ -27,7 +27,6 @@
      treemacs-move-forward-on-expand        nil
      treemacs-no-delete-other-windows       t
      treemacs-no-png-images                 nil
-     treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
      treemacs-position                      'left
      treemacs-project-follow-cleanup        nil
      treemacs-python-executable             (executable-find "python")
@@ -48,7 +47,7 @@
      treemacs-tag-follow-delay              1.5
      treemacs-user-mode-line-format         nil
      treemacs-width                         40)
-    
+
     ;; The default width and height of the icons is 22 pixels. If you are
     ;; using a Hi-DPI display, uncomment this to double the icon size.
     (treemacs-resize-icons 16)
@@ -64,21 +63,21 @@
        (treemacs-git-mode 'simple))))
 
   :bind
-  (:map global-map
-		("<f2>"      . treemacs)
-		("M-0"       . treemacs-select-window)
-		("C-x t 1"   . treemacs-delete-other-windows)
-		("C-x t t"   . treemacs)
-		("C-x t B"   . treemacs-bookmark)
-		("C-x t C-t" . treemacs-find-file)
-		("C-x t M-t" . treemacs-find-tag)))
+  (("<f2>"      . treemacs)
+   ("M-0"       . treemacs-select-window)
+   ("C-x t 1"   . treemacs-delete-other-windows)
+   ("C-x t t"   . treemacs)
+   ("C-x t B"   . treemacs-bookmark)
+   ("C-x t C-t" . treemacs-find-file)
+   ("C-x t M-t" . treemacs-find-tag)
+   ))
 
 ;; (use-package treemacs-evil
 ;;   :after treemacs evil
 ;;   :ensure t)
 
 ;; (use-package treemacs-projectile
-;;   :after treemacs projectil 
+;;   :after treemacs projectil
 ;;   :ensure t)
 
 ;; (use-package treemacs-icons-dired

@@ -7,9 +7,7 @@
   :init
   (setq projectile-mode-line-prefix ""
         projectile-sort-order 'recentf
-        projectile-use-git-grep t
-	projectile-cache-file (expand-dotlocal "projectile.cache")
-	projectile-known-projects-file (expand-dotlocal "projectile-bookmark.eld"))
+        projectile-use-git-grep t)
 
   :config
   (projectile-mode +1)

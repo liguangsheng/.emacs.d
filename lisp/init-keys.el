@@ -18,7 +18,7 @@
   (which-key-mode 1)) 
 
 (use-package which-key-posframe
-  :if preferences/enable-posframe
+  :disabled
   :init
   (setq which-key-posframe-font preferences/font)
   (which-key-posframe-mode 1))
