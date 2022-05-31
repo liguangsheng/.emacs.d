@@ -1,8 +1,8 @@
 (use-package centaur-tabs
-  :disabled
   :hook
   (dired-mode . centaur-tabs-local-mode)
   (after-init . centaur-tabs-mode)
+
   :init
   (setq centaur-tabs-style "bar"
 	centaur-tabs-height 32
@@ -13,14 +13,16 @@
 	centaur-tabs-set-modified-marker t
 	;; centaur-tabs-show-navigation-buttons t
 	)
+
   :config
-  (centaur-tabs-change-fonts "arial" 100)
+  ;; (centaur-tabs-change-fonts "arial" 100)
   (setq uniquify-separator "/")
   (setq uniquify-buffer-name-style 'forward)
 
-  ;; (:map evil-normal-state-map
-  ;; 	  ("g t" . centaur-tabs-forward)
-  ;; 	  ("g T" . centaur-tabs-backward))
+  :bind
+  (:map evil-normal-state-map
+	("g t" . centaur-tabs-forward)
+	("g T" . centaur-tabs-backward))
   )
 
 (provide 'init-tabline)

@@ -36,12 +36,7 @@
 (require 'init-keys)
 (require 'init-projectile)
 
-;; ui
-(require 'init-icons)
-(require 'init-posframe)
-(require 'init-tabline)
-
-;; languages
+;; languages & major-modes
 (require 'init-go)
 (require 'init-python)
 (require 'init-rust)
@@ -55,6 +50,9 @@
 (require 'init-editconfig)
 
 ;; tools
+(require 'init-posframe)
+(require 'init-icons)
+(require 'init-tabline)
 (require 'init-completion)
 ;; (require 'init-company)
 ;; (require 'init-lsp)
@@ -66,7 +64,7 @@
 (require 'init-vcs)
 (require 'init-hydra)
 (require 'init-treemacs)
-;; (require 'init-tree-sitter)
+(require 'init-tree-sitter)
 (require 'init-features)
 
 ;;; Experimental:

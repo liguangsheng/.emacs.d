@@ -62,36 +62,40 @@
       (`(t . _)
        (treemacs-git-mode 'simple))))
 
+  (my-leader-def
+    "tt" #'treemacs
+    "t0" #'treemacs-select-window)
+
   :bind
-  (("<f2>"      . treemacs)
-   ("M-0"       . treemacs-select-window)
-   ("C-x t 1"   . treemacs-delete-other-windows)
-   ("C-x t t"   . treemacs)
-   ("C-x t B"   . treemacs-bookmark)
-   ("C-x t C-t" . treemacs-find-file)
-   ("C-x t M-t" . treemacs-find-tag)
-   ))
+  (:map global-map
+	("<f2>"      . treemacs-select-window)
+	("M-0"       . treemacs-select-window)
+	("C-x t 1"   . treemacs-delete-other-windows)
+	("C-x t t"   . treemacs)
+	("C-x t B"   . treemacs-bookmark)
+	("C-x t C-t" . treemacs-find-file)
+	("C-x t M-t" . treemacs-find-tag)))
 
-;; (use-package treemacs-evil
-;;   :after treemacs evil
-;;   :ensure t)
+(use-package treemacs-evil
+  :after treemacs evil
+  :ensure t)
 
-;; (use-package treemacs-projectile
-;;   :after treemacs projectil
-;;   :ensure t)
+(use-package treemacs-projectile
+  :after treemacs projectil
+  :ensure t)
 
-;; (use-package treemacs-icons-dired
-;;   :after treemacs dired
-;;   :ensure t
-;;   :config (treemacs-icons-dired-mode))
+(use-package treemacs-icons-dired
+  :after treemacs dired
+  :ensure t
+  :config (treemacs-icons-dired-mode))
 
-;; (use-package treemacs-magit
-;;   :after treemacs magit
-;;   :ensure t)
+(use-package treemacs-magit
+  :after treemacs magit
+  :ensure t)
 
-;; (use-package treemacs-persp
-;;   :after treemacs persp-mode
-;;   :ensure t
-;;   :config (treemacs-set-scope-type 'Perspectives))
+(use-package treemacs-persp
+  :after treemacs persp-mode
+  :ensure t
+  :config (treemacs-set-scope-type 'Perspectives))
 
 (provide 'init-treemacs)
