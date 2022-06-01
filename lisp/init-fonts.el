@@ -3,7 +3,6 @@
 ;;; Commentary:
 ;;
 ;; Recommend Fonts:
-;; 
 ;; Latin: https://fonts.google.com/specimen/Roboto+Mono
 ;; Latin: https://github.com/tonsky/FiraCode
 ;; Latin: https://github.com/adobe-fonts/source-code-pro
@@ -68,8 +67,6 @@
     ))
 
 (when *gui* (setup-fonts))
-;; (when *gui* (add-hook 'after-init-hook #'setup-fonts))
-
 
 ;; Font Example:
 ;; | 你好  | 世界  |

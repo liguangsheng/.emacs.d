@@ -1,23 +1,13 @@
 (use-package lsp-mode
   :diminish lsp-mode
-  :hook ((lsp-mode . (lambda ()
-		       ;; Integrate `which-key'
-		       (lsp-enable-which-key-integration)
-
-		       ;; Format and organize imports
-		       ;;  (add-h ook 'before-save-hook #'lsp-format-buffer t t)
-		       ;;  (add-hook 'before-save-hook #'lsp-organize-imports t t))
-		       ))
-	 (lsp-managed-mode-hook . 'lsp-diagnostics-modeline-mode)
-	 )
-
-  :bind (:map lsp-mode-map
-	      ("C-c C-d" . lsp-describe-thing-at-point)
-	      ([remap xref-find-definitions] . lsp-find-definition)
-	      ([remap xref-find-references] . lsp-find-references))
 
   :init
-  (my-leader-def "ci" #'lsp-find-implementation)
+  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+  (add-hook 'lsp-managed-mode-hook #'lsp-diagnostics-modeline-mode)
+  (add-hook 'python-mode-hook #'lsp-deferred)
+  (add-hook 'go-mode-hook #'lsp-deferred)
+  (add-hook 'rust-mode-hook #'lsp-deferred)
+
   (setq lsp-auto-guess-root t       ; Detect project root
 	lsp-inhibit-message t
 	lsp-message-project-root-warning t
@@ -32,20 +22,25 @@
 	lsp-enable-symbol-highlighting t
 	lsp-enable-text-document-color nil
 	lsp-enable-indentation nil
+	lsp-enable-completion-at-point t
 	lsp-enable-on-type-formatting nil
 	lsp-diagnostics-modeline-scope :project
+	lsp-rust-server 'rust-analyzer
+	lsp-keymap-prefix "C-l"
 	)
 
-  (my-leader-def "c R" 'lsp-rename)
+  :config
+  (define-key lsp-mode-map (kbd "C-c C-d") #'lsp-describe-thing-at-point)
+  (define-key lsp-mode-map [remap xref-find-definitions] #'lsp-find-definition)
+  (define-key lsp-mode-map [remap xref-find-references] #'lsp-find-references)
+  (my-leader-def
+    :keymaps 'lsp-mode-map
+    "ci" #'lsp-find-implementation
+    "cR"  #'lsp-rename)
   )
+
 (use-package lsp-treemacs
   :requires (lsp treemacs))
-
-;; (use-package company-lsp
-;;   :requires (company lsp)
-;;   :init
-;;   (setq company-lsp-cache-candidates 'auto)
-;;   (push 'company-lsp company-backends))
 
 ;; (use-package lsp-ui
 ;;   :hook (lsp-mode . lsp-ui-mode)
@@ -76,18 +71,9 @@
 ;; 	      (setq lsp-ui-doc-border (face-foreground 'font-lock-comment-face))
 ;; 	      (set-face-background 'lsp-ui-doc-background (face-background 'tooltip)))))
 
-(setq lsp-rust-server 'rust-analyzer)
-
-(add-hooks (list 'python-mode-hook
-		 'go-mode-hook
-		 'rust-mode-hook
-		 'lua-mode-hook
-		 'powershell-mode-hook)
-	   #'lsp-deferred)
-
 (use-package lsp-pyright
   :hook (python-mode . (lambda ()
-                          (require 'lsp-pyright)
-                          (lsp))))  ; or lsp-deferred
+                         (require 'lsp-pyright)
+                         (lsp))))  ; or lsp-deferred
 
 (provide 'init-lsp)

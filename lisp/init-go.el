@@ -39,12 +39,6 @@
   :bind (:map go-mode-map
 	      ("C-c C-t" . go-gen-test-dwim)))
 
-;; use lsp instead
-;; (use-package go-guru
-;;   :bind (:map go-mode-map
-;; 	      ([remap xref-find-definitions] . go-guru-definition)
-;; 	      ([remap xref-find-references] . go-guru-referrers)))
-
 (use-package go-projectile
   :after projectile
   :commands (go-projectile-mode go-projectile-switch-project)
@@ -53,8 +47,6 @@
 
 (use-package go-add-tags)
 (use-package go-dlv)
-;; (use-package go-fill-struct) ; use lsp-execute-code-action instead
-;; (use-package go-rename) ; use lsp-rename instead
 (use-package go-impl)
 (use-package go-playground)
 (use-package go-snippets)
