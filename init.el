@@ -50,6 +50,7 @@
 (require 'init-editconfig)
 
 ;; tools
+(require 'init-features)
 (require 'init-posframe)
 (require 'init-icons)
 (require 'init-tabline)
@@ -64,8 +65,7 @@
 (require 'init-vcs)
 (require 'init-hydra)
 (require 'init-treemacs)
-;; (require 'init-tree-sitter)
-(require 'init-features)
+(require 'init-tree-sitter)
 
 ;;; Experimental:
 
