@@ -22,8 +22,14 @@
   :init
   (define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin))
 
-;; (use-package company-tabnine
-;;   :hook (prog-mode . (lambda () (push 'company-tabnine company-backends))))
+(use-package company-tabnine
+  :after (company)
+  :init
+  (defun add-tabnine-to-company ()
+    (push 'company-tabnine company-backends))
+  (add-hook 'graphql-mode-hook #'add-tabnine-to-company)
+  (add-hook 'protobuf-mode-hook #'add-tabnine-to-company)
+  )
 ;; 在编辑器里可以直接打出TabNine相关的命令
 ;; TabNine::sem: 开启TabNine基于semantic的补全
 ;; TabNine::config_dir: 显示配置文件夹
