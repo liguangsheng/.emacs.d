@@ -8,7 +8,9 @@
   :config
   (evil-ex-define-cmd "W"    'evil-write)
   (evil-ex-define-cmd "q"    'kill-this-buffer)
-  (evil-ex-define-cmd "quit" 'evil-quit))
+  (evil-ex-define-cmd "quit" 'evil-quit)
+  (evil-set-initial-state 'special-mode 'insert)
+  )
 
 (use-package evil-collection
   :after evil

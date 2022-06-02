@@ -1,5 +1,4 @@
 (use-package citre
-  :defer t
   :init
   ;; This is needed in `:init' block for lazy load to work.
   (require 'citre-config)
@@ -18,7 +17,6 @@
     "c c u" 'citre-update-this-tags-file
     )
 
-  :config
   (setq
    ;; Set these if readtags/ctags is not in your path.
    citre-readtags-program "/usr/bin/readtags"
@@ -35,7 +33,27 @@
    ;; `citre-mode' is automatically enabled.  If you only want this to work for
    ;; certain modes (like `prog-mode'), set it like this.
    citre-auto-enable-citre-mode-modes '(graphql-mode
-					protobuf-mode
-					)))
+					protobuf-mode)
+   citre-enable-capf-integration nil
+   )
+
+  (defun citre-mix-multi-backends ()
+    (setq-local completion-category-defaults nil)
+    (setq-local completion-at-point-functions
+		(list
+		 (cape-capf-buster
+                  (cape-super-capf
+		   #'tabnine-completion-at-point
+                   #'citre-completion-at-point
+		   #'cape-keyword
+		   #'cape-abbrev
+                   #'cape-file
+                   #'cape-dabbrev
+                   )
+                  'equal)
+		 )))
+
+  (add-hook 'citre-mode-hook #'citre-mix-multi-backends)
+  )
 
 (provide 'init-tags)

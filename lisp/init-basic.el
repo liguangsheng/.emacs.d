@@ -108,9 +108,15 @@
 (use-package server
   :commands
   (server-running-p server-start)
-  :hook
-  (after-init . (lambda () (when (and preferences/enable-server
-				      (not (server-running-p)) (server-start))))))
+  :init
+  (setq server-socket-dir (expand-user-var "server")
+	server-name "server")
+  (make-directory server-socket-dir :parents)
+  (add-hook 'after-init-hook (lambda () (when (and preferences/enable-server
+						   (not (server-running-p)) (server-start)))))
+  :config
+  (defun server-ensure-safe-dir (dir) "Noop" t)
+  )
 
 (use-package gcmh
   :diminish
@@ -211,12 +217,10 @@
 ;;     (delete-other-windows)))
 
 ;; Windows下的版本可能没有这个函数，兼容一下
-;; (unless (functionp 'ensure-list)
-;;   (defun ensure-list (object)
-;;     (if (listp object)
-;; 	object
-;;       (list object))))
-
-
+(unless (functionp 'ensure-list)
+  (defun ensure-list (object)
+    (if (listp object)
+	object
+      (list object))))
 
 (provide 'init-basic)

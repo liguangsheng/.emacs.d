@@ -14,15 +14,12 @@
 ;;; Quick Settings:
 
 (setq-default
- preferences/theme  (if *gui* 'doom-dracula nil)
+ preferences/theme  (if *gui* 'doom-vibrant nil)
  preferences/font   "JetBrainsMonoMedium Nerd Font:pixelsize=12:weight=medium"
  preferences/cnfont (font-spec :family "AR PL UKai CN" :size 14)
- ;; preferences/cnfont (font-spec :family "WenQuanYi Micro Hei" :size 14)
-
  preferences/python-executable (cond (*windows* "C:\\Program Files\\Python39\\python.exe")
 				     (t         "python3"))
-
- preferences/enable-server   t
+ preferences/enable-server (not *windows*)
 
  line-spacing 0.3
  )
@@ -54,12 +51,12 @@
 (require 'init-posframe)
 (require 'init-icons)
 (require 'init-tabline)
+(require 'init-tags)
 (require 'init-completion)
 (require 'init-company)
 (require 'init-lsp)
 ;; (require 'init-corfu)
 ;; (require 'init-lsp-bridge)
-(require 'init-tags)
 (require 'init-flycheck)
 (require 'init-dired)
 (require 'init-vcs)

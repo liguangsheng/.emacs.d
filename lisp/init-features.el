@@ -5,7 +5,7 @@
 
 (use-package undo-tree
   :hook (after-init . global-undo-tree-mode)
-  :config
+  :init
   (setq undo-tree-visualizer-diff t
         undo-tree-auto-save-history nil
         undo-tree-enable-undo-in-region nil))
@@ -72,7 +72,7 @@
 
 ;; 自动保存scratch buffer
 (use-package persistent-scratch
-  :config
+  :init
   (setq persistent-scratch-autosave-interval 60)
   (persistent-scratch-setup-default)
   (persistent-scratch-autosave-mode 1))

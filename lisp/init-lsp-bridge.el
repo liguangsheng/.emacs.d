@@ -27,6 +27,7 @@
 		 (cape-capf-buster
                   (cape-super-capf
                    #'lsp-bridge-capf
+                   #'cape-keyword
                    #'cape-file
                    #'cape-dabbrev
                    )
