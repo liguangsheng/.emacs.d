@@ -20,7 +20,6 @@
  preferences/python-executable (cond (*windows* "C:\\Program Files\\Python39\\python.exe")
 				     (t         "python3"))
  preferences/enable-server (not *windows*)
-
  line-spacing 0.3
  )
 

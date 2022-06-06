@@ -9,18 +9,21 @@
   (evil-ex-define-cmd "W"    'evil-write)
   (evil-ex-define-cmd "q"    'kill-this-buffer)
   (evil-ex-define-cmd "quit" 'evil-quit)
-  (evil-set-initial-state 'special-mode 'insert)
+  ;; (evil-set-initial-state 'special-mode 'insert)
   )
 
 (use-package evil-collection
   :after evil
-  :config
+  :init
   (evil-collection-init))
 
 (use-package evil-surround
-  :config (global-evil-surround-mode 1))
+  :after evil
+  :init (global-evil-surround-mode 1))
 
 (use-package evil-commentary
-  :hook (after-init . evil-commentary-mode))
+  :after evil
+  :init
+  (add-hook 'after-init-hook #'evil-commentary-mode))
 
 (provide 'init-evil)

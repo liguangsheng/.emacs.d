@@ -1,10 +1,11 @@
 (use-package dired
   :straight nil
-  :config
+  :init
   (setq dired-recursive-deletes 'always
         dired-recursive-copies  'always
 	dired-kill-when-opening-new-dired-buffer t
-	))
+	)
+  )
 
 (use-package dired-single
   :config
