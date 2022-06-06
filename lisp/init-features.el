@@ -72,6 +72,7 @@
 
 ;; 自动保存scratch buffer
 (use-package persistent-scratch
+  :disabled
   :init
   (setq persistent-scratch-autosave-interval 60)
   (persistent-scratch-setup-default)

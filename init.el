@@ -14,7 +14,7 @@
 ;;; Quick Settings:
 
 (setq-default
- preferences/theme  (if *gui* 'doom-vibrant nil)
+ preferences/theme  (if *gui* 'doom-dracula nil)
  preferences/font   "JetBrainsMonoMedium Nerd Font:pixelsize=12:weight=medium"
  preferences/cnfont (font-spec :family "AR PL UKai CN" :size 14)
  preferences/python-executable (cond (*windows* "C:\\Program Files\\Python39\\python.exe")
@@ -53,10 +53,10 @@
 (require 'init-tabline)
 (require 'init-tags)
 (require 'init-completion)
-(require 'init-company)
-(require 'init-lsp)
-;; (require 'init-corfu)
-;; (require 'init-lsp-bridge)
+;; (require 'init-company)
+;; (require 'init-lsp)
+(require 'init-corfu)
+(require 'init-lsp-bridge)
 (require 'init-flycheck)
 (require 'init-dired)
 (require 'init-vcs)

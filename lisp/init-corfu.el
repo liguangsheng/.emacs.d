@@ -30,6 +30,7 @@
 
   :init
   (global-corfu-mode)
+  (corfu-indexed-mode)
   )
 
 ;; A few more useful configurations...
