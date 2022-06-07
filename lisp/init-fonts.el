@@ -1,4 +1,4 @@
-;;; init-fonts.el 
+;;; init-fonts.el
 
 ;;; Commentary:
 ;;

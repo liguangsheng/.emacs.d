@@ -37,6 +37,7 @@
 
   ;; Enable lsp-bridge.
   (add-hooks (list
+	      'emacs-lisp-mode
 	      'c-mode-hook
 	      'c++-mode-hook
 	      'python-mode-hook

@@ -48,7 +48,9 @@
 (use-package go-add-tags)
 (use-package go-dlv)
 (use-package go-impl)
-(use-package go-playground)
+(use-package go-playground
+  :diminish
+  :commands (go-playground-mode))
 (use-package go-snippets)
 (use-package golint)
 

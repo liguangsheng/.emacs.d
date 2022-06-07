@@ -20,15 +20,16 @@
   :init
   (setq doom-modeline-height 25
 	doom-modeline-bar t
-	doom-modeline-bar-width 10
+	doom-modeline-bar-width 6
 	doom-modeline-hud nil
+	doom-modeline-enable-word-count t
 	doom-modeline-window-width-limit fill-column
 	doom-modeline-project-detection 'project
 	doom-modeline-buffer-file-name-style 'relative-to-project
-	doom-modeline-icon (display-graphic-p)
+	doom-modeline-icon t
 	doom-modeline-modal-icon t
 	doom-modeline-major-mode-icon t
-	doom-modeline-buffer-state-icon (display-graphic-p)
+	doom-modeline-buffer-state-icon t
 	doom-modeline-buffer-modification-icon t
 	doom-modeline-number-limit 99
 	doom-modeline-lsp t
@@ -40,14 +41,15 @@
   (doom-modeline-mode 1)
   )
 
-;; (use-package uwu-theme
-;;   :straight (uwu-theme :type git :host github :repo "kborling/uwu-theme.el"))
-
+(use-package atom-one-dark-theme  :straight (atom-one-dark-theme  :type git :host github :repo "jonathanchu/atom-one-dark-theme"))
+(use-package atom-one-light-theme :straight (atom-one-light-theme :type git :host github :repo "jonathanchu/atom-one-light-theme"))
+(use-package uwu-theme :straight (uwu-theme :type git :host github :repo "kborling/uwu-theme.el"))
 (use-package kaolin-themes)
-
 (use-package modus-themes)
 
-;; (add-hook 'emacs-startup-hook (lambda () (load-theme preferences/theme t)))
-(load-theme preferences/theme t)
+(defun switch-to-light-theme () (interactive) (load-theme preferences/light-theme t))
+(defun switch-to-dark-theme  () (interactive) (load-theme preferences/dark-theme  t))
+
+(when *gui* (switch-to-dark-theme))
 
 (provide 'init-theme)

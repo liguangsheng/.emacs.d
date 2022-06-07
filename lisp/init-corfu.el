@@ -57,6 +57,7 @@
 ;;   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package corfu-doc
+  :if *gui*
   :init
   (add-hook 'corfu-mode-hook #'corfu-doc-mode)
   :config

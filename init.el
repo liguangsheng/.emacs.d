@@ -14,7 +14,8 @@
 ;;; Quick Settings:
 
 (setq-default
- preferences/theme  (if *gui* 'doom-dracula nil)
+ preferences/dark-theme   (if *gui* 'doom-vibrant nil)
+ preferences/light-theme  (if *gui* 'doom-one-light nil)
  preferences/font   "JetBrainsMonoMedium Nerd Font:pixelsize=12:weight=medium"
  preferences/cnfont (font-spec :family "AR PL UKai CN" :size 14)
  preferences/python-executable (cond (*windows* "C:\\Program Files\\Python39\\python.exe")
