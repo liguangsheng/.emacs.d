@@ -1,6 +1,6 @@
-(use-package rust-mode
+(use-package rustic
   :custom
-  (rust-format-on-save t))
+  (rustic-lsp-server 'rust-analyzer))
 
 (use-package rust-playground)
 
