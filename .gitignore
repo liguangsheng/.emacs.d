@@ -1,3 +1,6 @@
 .DS_Store
 etc
 var
+eln-cache
+auto-save-list
+elpa
