@@ -1,5 +1,12 @@
 ;; Defer garbage collection further back in the startup process
-(setq gc-cons-threshold most-positive-fixnum)
+(setq gc-cons-threshold most-positive-fixnum
+      gc-cons-percentage 0.5
+	  native-comp-async-report-warnings-errors nil
+	  )
+
+(when (boundp 'native-comp-eln-load-path)
+  (setcar native-comp-eln-load-path
+          (expand-file-name "var/eln-cache" user-emacs-directory)))
 
 ;; Package initialize occurs automatically, before `user-init-file' is
 ;; loaded, but after `early-init-file'. We handle package
@@ -17,12 +24,5 @@
   (push '(ns-transparent-titlebar . t) default-frame-alist))
 
 (set-language-environment "UTF-8")
-
-;; (add-to-list 'initial-frame-alist '(fullscreen . maximized))
-;; (add-to-list 'default-frame-alist '(background-color . "#282c34")) ;; doom-one background color
-(add-to-list 'default-frame-alist '(background-color . "#242730")) ;; doom-vibrant background color
-
-;; 设置字体
-;; (setq-default default-text-properties '(line-spacing 0.0 line-height 19))
 
 ;; early-init.el ends here

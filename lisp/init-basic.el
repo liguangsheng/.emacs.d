@@ -1,64 +1,98 @@
-(defvaralias 'preferences/python-executable 'python-shell-interpreter)
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            "Recover GC values after startup."
+            (setq gc-cons-threshold 100000000
+                  gc-cons-percentage 0.1)))
 
-(defvar preferences/enable-server nil)
+(require 'subr-x)
+(require 'cl-lib)
+
+(defconst user-emacs-lisp-directory
+  (expand-file-name "lisp/" user-emacs-directory)
+  "Path to .emacs.d/lisp directory where init files exists.")
+
+(defconst user-emacs-site-lisp-directory
+  (expand-file-name "site-lisp/" user-emacs-directory)
+  "Path to .emacs.d/site-lisp directory.")
+
+(defconst user-emacs-etc-directory
+  (expand-file-name "etc/" user-emacs-directory))
+
+(defconst user-emacs-var-directory
+  (expand-file-name "var/" user-emacs-directory))
+
+(defconst *windows*  (eq system-type 'windows-nt))
+(defconst *macos*    (eq system-type 'darwin))
+(defconst *linux*    (or (eq system-type 'gnu/linux) (eq system-type 'linux)))
+(defconst *gui*      (display-graphic-p))
+(defconst *emacs26+* (>= emacs-major-version 26))
+(defconst *emacs27+* (>= emacs-major-version 27))
+(defconst *emacs28+* (>= emacs-major-version 28))
+(defconst *emacs29+* (>= emacs-major-version 29))
+
+(defun expand-user-etc (path)
+  (expand-file-name path user-emacs-etc-directory))
+
+(defun expand-user-var (path)
+  (expand-file-name path user-emacs-var-directory))
+
+(defun my-format-buffer ()
+  "Format the entire buffer using the `indent-region' function."
+  (interactive)
+  (indent-region (point-min) (point-max)))
 
 (defun copy-file-path ()
-  (interactive "P")
-  (kill-new (file-relative-name  (buffer-file-name) (projectile-project-root))))
-
-(defun format-buffer ()
+  "Copy the current buffer's file path to the clipboard."
   (interactive)
-  (save-excursion
-    (indent-region (point-min) (point-max) nil)))
+  (if (buffer-file-name)
+      (let ((file-path (buffer-file-name)))
+        (kill-new file-path)
+        (message "File path '%s' copied to clipboard." file-path))
+    (message "Buffer is not visiting a file.")))
 
-(setq-default keep-alive-buffers '("\\**\\*"
-				   "^\\*scratch\\*$"
-				   "^\\*Messages\\*$"
-				   ))
+(setq keep-alive-buffers '("\\**\\*"
+						   "^\\*scratch\\*$"
+						   "^\\*Messages\\*$"
+						   ))
 
 (defun kill-all-buffers ()
   (interactive)
   (cl-loop for buffer in (buffer-list)
-	   for bufname = (s-trim (buffer-name buffer))
-	   unless (cl-loop for rx in keep-alive-buffers
-			   when (> (s-count-matches rx bufname) 0)
-			   return bufname)
-	   do (kill-buffer bufname)))
+		   for bufname = (s-trim (buffer-name buffer))
+		   unless (cl-loop for rx in keep-alive-buffers
+						   when (> (s-count-matches rx bufname) 0)
+						   return bufname)
+		   do (kill-buffer bufname)))
 
 (defun kill-other-buffers ()
   (interactive)
   (cl-loop for buffer in (buffer-list)
-	   for bufname = (buffer-name buffer)
-	   unless (or (string= bufname (buffer-name (current-buffer)))
-		      (cl-loop for rx in keep-alive-buffers
-			       when (> (s-count-matches rx bufname) 0)
-			       return bufname))
-	   do (kill-buffer bufname)))
+		   for bufname = (buffer-name buffer)
+		   unless (or (string= bufname (buffer-name (current-buffer)))
+					  (cl-loop for rx in keep-alive-buffers
+							   when (> (s-count-matches rx bufname) 0)
+							   return bufname))
+		   do (kill-buffer bufname)))
 
 (defun switch-to-modified-buffer ()
   "Switch to modified buffer"
   (interactive)
   (let ((buf-list
-	 (seq-filter
-	  (lambda (x) (not (or
-			    (not (buffer-modified-p x))
-			    (s-prefix? "*" (buffer-name x))
-			    (s-prefix? " *" (buffer-name x))
-			    (s-suffix? "-mode" (buffer-name x)))))
-	  (buffer-list))))
+		 (seq-filter
+		  (lambda (x) (not (or
+							(not (buffer-modified-p x))
+							(s-prefix? "*" (buffer-name x))
+							(s-prefix? " *" (buffer-name x))
+							(s-suffix? "-mode" (buffer-name x)))))
+		  (buffer-list))))
     (if buf-list
-	(switch-to-buffer (first buf-list))
+		(switch-to-buffer (first buf-list))
       (message "No modified buffer."))))
 
 (defun open-init-el ()
   "Open ~/.emacs.d/init.el"
   (interactive)
   (find-file "~/.emacs.d/init.el"))
-
-(defun open-inbox ()
-  "Open ~/INBOX"
-  (interactive)
-  (find-file "~/INBOX"))
 
 (defun switch-to-scratch ()
   "Swtich to *scratch* buffer"
@@ -75,16 +109,20 @@
 
 (defun add-hooks (hooks functions)
   (let ((hooks (ensure-list hooks))
-	(functions (if (functionp functions) (list functions) functions)))
+		(functions (if (functionp functions) (list functions) functions)))
     (dolist (hook hooks)
       (dolist (func functions)
-	(add-hook hook func)))))
+		(add-hook hook func)))))
 
 (when (< emacs-major-version 27)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
-  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
+  (add-to-list '
+   default-frame-alist '(ns-transparent-titlebar . t)))
+
+(when (>= emacs-major-version 29)
+  (pixel-scroll-precision-mode 1))
 
 (use-package no-littering
   :init
@@ -97,23 +135,23 @@
   :hook ((prog-mode markdown-mode conf-mode) . whitespace-mode)
   :config
   (setq whitespace-style '(face             ; visualize things below:
-			   ;; empty            ; empty lines at beginning/end of buffer
-			   ;; lines-tail       ; lines go beyond `fill-column'
-			   space-before-tab ; spaces before tab
-			   trailing         ; trailing blanks
-			   tabs             ; tabs (show by face)
-			   ;; tab-mark         ; tabs (show by symbol))))
-			   )))
+						   empty            ; empty lines at beginning/end of buffer
+						   space-before-tab ; spaces before tab
+						   trailing         ; trailing blanks
+						   tabs             ; tabs (show by face)
+						   ;; tab-mark         ; tabs (show by symbol))))
+						   ;; lines-tail       ; lines go beyond `fill-column'
+						   )))
 
 (use-package server
   :commands
   (server-running-p server-start)
   :init
   (setq server-socket-dir (expand-user-var "server")
-	server-name "server")
+		server-name "server")
   (make-directory server-socket-dir :parents)
-  (add-hook 'after-init-hook (lambda () (when (and preferences/enable-server
-						   (not (server-running-p)) (server-start)))))
+  (add-hook 'after-init-hook (lambda () (when (and my-enable-server
+												   (not (server-running-p)) (server-start)))))
   :config
   (defun server-ensure-safe-dir (dir) "Noop" t)
   )
@@ -122,12 +160,13 @@
   :diminish
   :init
   (setq gcmh-idle-delay 5
-	gcmh-verbose nil
-	gcmh-high-cons-threshold #x6400000) ;; 100 MB
+		gcmh-verbose nil
+		gcmh-high-cons-threshold #x6400000) ;; 100 MB
   (gcmh-mode 1))
 
 ;; Better variables
-(setq
+(setq-default
+ auto-mode-case-fold                      nil
  apropos                                  t
  backup-by-copying                        t
  comint-prompt-read-only                  t
@@ -152,6 +191,10 @@
  scroll-conservatively                    1000
  scroll-margin                            10
  help-window-select                       t
+ custom-file                              (no-littering-expand-etc-file-name "custom.el")
+ warning-minimum-level                    :emergency
+ bidi-display-reordering                  nil
+ clean-buffer-list-delay-special          1
  )
 
 ;; Backup
@@ -171,6 +214,7 @@
 (delete-selection-mode 1)
 (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
 (electric-pair-mode 1)
+(midnight-mode 1)
 
 ;; 高亮当前行
 (global-hl-line-mode 1)
@@ -201,26 +245,6 @@
   (set-clipboard-coding-system 'utf-16-le))
 
 
-;; (defvar toggle-one-window-window-configuration nil
-;;   "The window configuration use for `toggle-one-window'.")
-
-;; (defun toggle-one-window ()
-;;   "Toggle between window layout and one window."
-;;   (interactive)
-;;   (if (equal (length (cl-remove-if #'window-dedicated-p (window-list))) 1)
-;;       (if toggle-one-window-window-configuration
-;; 	  (progn
-;; 	    (set-window-configuration toggle-one-window-window-configuration)
-;; 	    (setq toggle-one-window-window-configuration nil))
-;; 	(message "No other windows exist."))
-;;     (setq toggle-one-window-window-configuration (current-window-configuration))
-;;     (delete-other-windows)))
-
-;; Windows下的版本可能没有这个函数，兼容一下
-(unless (functionp 'ensure-list)
-  (defun ensure-list (object)
-    (if (listp object)
-	object
-      (list object))))
+(when (and custom-file (file-readable-p custom-file) (load custom-file)))
 
 (provide 'init-basic)

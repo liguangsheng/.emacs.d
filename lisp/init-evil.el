@@ -1,8 +1,8 @@
 (use-package evil
   :init
   (setq evil-want-integration t
-	evil-want-keybinding  nil
-	evil-undo-system      'undo-tree)
+		evil-want-keybinding  nil
+		evil-undo-system      'undo-tree)
   (evil-mode 1)
 
   :config
@@ -13,17 +13,27 @@
   )
 
 (use-package evil-collection
-  :after evil
   :init
   (evil-collection-init))
 
 (use-package evil-surround
-  :after evil
   :init (global-evil-surround-mode 1))
 
 (use-package evil-commentary
-  :after evil
   :init
   (add-hook 'after-init-hook #'evil-commentary-mode))
+
+(use-package evil-mc
+  :init
+  (global-evil-mc-mode 1)
+  (evil-define-key 'visual evil-mc-key-map (kbd "C-d") 'evil-mc-make-and-goto-next-match)
+  )
+
+(use-package evil-search-highlight-persist
+  :custom-face
+  (evil-search-highlight-persist-highlight-face ((t (:background "maroon"))))
+  :init
+  (global-evil-search-highlight-persist t)
+  )
 
 (provide 'init-evil)

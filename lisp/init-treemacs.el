@@ -4,6 +4,11 @@
   :init
   (with-eval-after-load 'winum
     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+
+  (my-leader-def
+    "fE" #'treemacs
+    "fe" #'treemacs-select-window)
+
   :config
   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
   (progn
@@ -14,7 +19,7 @@
      treemacs-eldoc-display                 t
      treemacs-file-event-delay              5000
      treemacs-file-extension-regex          treemacs-last-period-regex-value
-     treemacs-file-follow-delay             0.2
+     treemacs-file-follow-delay             0.5
      treemacs-file-name-transformer         #'identity
      treemacs-follow-after-init             t
      treemacs-git-command-pipe              ""
@@ -50,7 +55,7 @@
 
     ;; The default width and height of the icons is 22 pixels. If you are
     ;; using a Hi-DPI display, uncomment this to double the icon size.
-    (treemacs-resize-icons 16)
+    (treemacs-resize-icons 14)
 
     (treemacs-follow-mode t)
     (treemacs-filewatch-mode t)
@@ -62,26 +67,19 @@
       (`(t . _)
        (treemacs-git-mode 'simple))))
 
-  (my-leader-def
-    "tt" #'treemacs
-    "t0" #'treemacs-select-window)
 
   :bind
   (:map global-map
-	("<f2>"      . treemacs-select-window)
-	("M-0"       . treemacs-select-window)
-	("C-x t 1"   . treemacs-delete-other-windows)
-	("C-x t t"   . treemacs)
-	("C-x t B"   . treemacs-bookmark)
-	("C-x t C-t" . treemacs-find-file)
-	("C-x t M-t" . treemacs-find-tag)))
+		("<f2>"      . treemacs)
+		("M-0"       . treemacs-select-window)
+		("C-x t 1"   . treemacs-delete-other-windows)
+		("C-x t t"   . treemacs)
+		("C-x t B"   . treemacs-bookmark)
+		("C-x t C-t" . treemacs-find-file)
+		("C-x t M-t" . treemacs-find-tag)))
 
 (use-package treemacs-evil
   :after treemacs evil
-  :ensure t)
-
-(use-package treemacs-projectile
-  :after treemacs projectil
   :ensure t)
 
 (use-package treemacs-icons-dired

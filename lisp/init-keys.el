@@ -1,97 +1,86 @@
+(use-package hydra)
+
+(use-package major-mode-hydra
+  :bind ("M-SPC" . major-mode-hydra))
+
+(use-package pretty-hydra
+  :demand t
+  :preface
+  (defun config-hydras--add-quit-bindings (result)
+    (append '(("q" nil :exit t)
+			  ("<escape>" nil :exit t))
+            result))
+  :config
+  (advice-add #'pretty-hydra--get-heads :filter-return #'config-hydras--add-quit-bindings))
+
 (use-package which-key
   :init
   (setq which-key-popup-type 'side-window
-	which-key-side-window-location 'bottom
-	which-key-idle-delay 0.4
-	which-key-separator " → "
-	which-key-prefix-prefix "+"
-	which-key-side-window-max-heght 0.25)
+		which-key-side-window-location 'bottom
+		which-key-idle-delay 0.4
+		which-key-separator " → "
+		which-key-prefix-prefix "+"
+		which-key-side-window-max-heght 0.25
+		which-key-sort-order 'which-key-prefix-then-key-order
+		)
   (which-key-setup-minibuffer)
-  (which-key-mode 1))
-
-(global-set-key (kbd "M-j") #'next-window-any-frame)
-(global-set-key (kbd "M-k") #'previous-window-any-frame)
-(global-set-key (kbd "M-[") #'xref-pop-marker-stack)
-(global-set-key (kbd "M-]") #'xref-find-definitions)
+  (which-key-mode 1)
+  )
 
 (use-package general
   :init
   (defvar my-leader-key "SPC")
   (defvar my-leader-alt-key "C-,")
-  (defvar my-localleader-key "SPC m")
-  (defvar my-localleader-alt-key "C-, m")
+  (defvar my-local-leader-key "SPC m")
+  (defvar my-local-leader-alt-key "C-, m")
 
-  :config
   (general-create-definer my-leader-def
     :states '(normal insert visual emacs)
     :prefix my-leader-key
     :non-normal-prefix my-leader-alt-key
     :global-prefix my-leader-alt-key)
 
-  (my-leader-def
-    "SPC" '(projectile-find-file     :wk "Find file in project")
-    "RET" '(bookmark-jump            :wk "Jump to bookmark")
-    ":"   '(execute-extended-command :wk "M-x")
-    ";"   '(eval-last-sexp           :wk "Eval last sexp")
-    "`"   '(evil-switch-to-windows-last-buffer
-	    :wk "Switch to last buffer")
+  (general-create-definer my-local-leader-def
+    :states '(normal insert visual emacs)
+	:prefix my-local-leader-key
+    :non-normal-prefix my-local-leader-alt-key
+    :global-prefix my-local-leader-alt-key)
 
-    ;; buffer
-    "b" '(:ignore t :wk "buffer")
-    "b b" '(switch-to-buffer :wk "Switch buffer")
-    "b d" '(kill-this-buffer :wk "Kill this buffer")
-    "b D" '(kill-buffer      :wk "Kill buffer")
+  :config
+  (my-leader-def
+    "SPC" '(avy-goto-word-1                    :wk "Find file in project")
+    "RET" '(bookmark-jump                      :wk "Jump to bookmark")
+    ":"   '(execute-extended-command           :wk "M-x")
+    ";"   '(eval-last-sexp                     :wk "Eval last sexp")
+    "`"   '(evil-switch-to-windows-last-buffer :wk "Switch to last buffer")
+    "="   'my-format-buffer
 
     ;; code
-    "c" '(:ignore t :wk "code")
-    "c d" 'xref-find-definitions
-    "c D" 'xref-find-definitions-other-window
-    "c r" 'xref-find-references
-    "c f" 'format-buffer
-    "c I" 'imenu
+    "c"   '(:ignore t :wk "code")
+    "cd" 'xref-find-definitions
+    "co" 'xref-find-definitions-other-window
+    "cr" 'xref-find-references
+    "cI" 'imenu
 
     ;; file
-    "f" '(:ignore t :wk "file")
-    "f e" '(open-init-el       :wk "open ~/.emacs.d/init.el")
-    "f f" '(find-file          :wk "Find file")
-    "f d" '(find-dir           :wk "Find file")
-    "f r" '(recentf-open-files :wk "Recent files")
-    "f F" '(my/find-file-from-here :wk "Find file from here")
-
-    ;; project
-    "p" '(:ignore t :wk "+project")
-    "p p" '(projectile-switch-project              :wk "Switch project")
-    "p f" '(projectile-find-file                   :wk "Find file in project")
-    "p i" '(projectile-invalidate-cache            :wk "Invalidate project cache")
-    "p 4" '(projectile-find-file-dwim-other-window :wk "Find project file in other window")
-    "p 5" '(projectile-find-file-dwim-other-frame  :wk "Find project file in other frame")
-    "p d" '(projectile-find-dir                    :wk "Find dir in project")
+    "f"   '(:ignore t :wk "file")
+    "fI" '(open-init-el           :wk "open ~/.emacs.d/init.el")
+    "ff" '(find-file              :wk "Find file")
+    "fd" '(find-dir               :wk "Find file")
+    "fr" '(recentf-open-files     :wk "Recent files")
+    "fF" '(my/find-file-from-here :wk "Find file from here")
 
     ;; quit
     "q" '(:ignore t :wk "quit")
-    "q Q" '(kill-emacs    :wk "Quit emacs")
-    "q r" '(restart-emacs :wk "Restart emacs")
-
-    ;; search
-    "s"   '(:ignore t               :wk "search")
-    "s b" '(consult-line            :wk "Search buffer")
-    "s s" '(consult-line            :wk "Search buffer")
-    "s p" '(consult-ripgrep-project :wk "Search project")
-    "s g" '(vc-git-grep             :wk "Search by git grep")
-    "s i" '(imenu                   :wk "Jump to symbol")
-
-    ;; window
-    "w" '(:ignore t :wk "window")
-    "w w" 'ace-window
-    "w |" 'split-window-horizontally
-    "w -" 'split-window-vertically
-    "w d" 'delete-window
-    "w D" 'ace-delete-window
-    "w o" 'delete-other-windows
-    "w j" 'next-window-any-frame
-    "w k" 'previous-window-any-frame
-    "w m" 'toggle-one-window
+    "qQ" '(kill-emacs    :wk "Quit emacs")
+    "qr" '(restart-emacs :wk "Restart emacs")
     )
   )
+
+(global-set-key (kbd "M-j") #'next-window-any-frame)
+(global-set-key (kbd "M-k") #'previous-window-any-frame)
+(global-set-key (kbd "M-[") #'xref-pop-marker-stack)
+(global-set-key (kbd "M-]") #'xref-find-definitions)
+(global-set-key (kbd "C-c C-f") #'my-format-buffer)
 
 (provide 'init-keys)

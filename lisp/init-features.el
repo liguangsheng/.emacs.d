@@ -2,6 +2,7 @@
 (use-package dash)
 (use-package shut-up)
 (use-package restart-emacs)
+(use-package posframe)
 
 (use-package undo-tree
   :hook (after-init . global-undo-tree-mode)
@@ -27,22 +28,6 @@
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
 
-;; 跳转
-(use-package avy
-  :bind
-  ("C-:" . avy-goto-char)
-  ("C-'" . avy-goto-char-2)
-  ("M-g f" . avy-goto-line)
-  ("M-g w" . avy-goto-word-1)
-  ("M-g e" . avy-goto-word-0)
-  ("C-c C-j" . avy-resume)
-
-  :init
-  (avy-setup-default)
-  (my-leader-def
-    "'" 'avy-goto-char-2)
-  )
-
 ;; 彩虹分隔符
 (use-package rainbow-delimiters
   :hook ((text-mode prog-mode fundamental-mode) . #'rainbow-delimiters-mode))
@@ -63,13 +48,6 @@
 (use-package volatile-highlights
   :config (volatile-highlights-mode t))
 
-;; 高亮对应的paren
-(use-package paren
-  :ensure nil
-  :hook (after-init . show-paren-mode)
-  :init (setq show-paren-when-point-inside-paren t
-	      show-paren-when-point-in-periphery t))
-
 ;; 自动保存scratch buffer
 (use-package persistent-scratch
   :disabled
@@ -78,10 +56,10 @@
   (persistent-scratch-setup-default)
   (persistent-scratch-autosave-mode 1))
 
-;; (use-package exec-path-from-shell
-;;   :config
-;;   (when (memq window-system '(mac ns))
-;;     (exec-path-from-shell-initialize)))
+(use-package exec-path-from-shell
+  :config
+  (when (memq window-system '(mac ns))
+    (exec-path-from-shell-initialize)))
 
 (use-package vi-tilde-fringe
   :init
@@ -97,12 +75,11 @@
          ("M-P" . symbol-overlay-switch-backward)
          ("M-C" . symbol-overlay-remove-all)
          ([M-f3] . symbol-overlay-remove-all)
-	 :map symbol-overlay-map
-	 ([M-up] . symbol-overlay-jump-prev)
-	 ([M-down] . symbol-overlay-jump-next)
-	 )
+		 :map symbol-overlay-map
+		 ([M-up] . symbol-overlay-jump-prev)
+		 ([M-down] . symbol-overlay-jump-next)
+		 )
   )
-
 
 ;; 将buffer中#000000样式的16进制rgb渲染出染色
 ;; 需要的时候手动开启M-x rainbow-mode
@@ -117,13 +94,42 @@
   (yas-global-mode 1))
 
 (use-package format-all
-  :hook (prog-mode . format-all-mode)
-  :bind ([remap format-buffer] . format-all-buffer))
-
-(use-package zoom-window
+  :bind ("C-c C-f" . format-all-buffer)
+  :commands (define-format-all-formatter)
   :init
-  (my-leader-def
-    "w m" 'zoom-window-zoom
-    "w n" 'zoom-window-next))
+  (setq format-all-formatters '(("Go" goimports)
+								("Shell" shfmt)
+								("GraphQL" prettier)
+								("Protocol Buffer" my-format-buffer)))
+  )
+
+(when my-auto-restore-session
+  (use-package desktop
+	:init
+	;; 在 after-init-hook 中延迟执行 desktop-read 函数，自动恢复会话
+	(add-hook 'after-init-hook 'desktop-read)
+
+	:config
+	;; 设置 desktop 文件保存的目录和文件名
+	(setq desktop-dirname             (expand-user-var "desktop")
+          desktop-base-file-name      "emacs.desktop"
+          desktop-base-lock-name      "emacs.desktop.lock"
+          desktop-path                (list desktop-dirname)
+          desktop-save                t
+          desktop-files-not-to-save   "^$" ; 过滤掉不保存的文件（例如reload tramp paths）
+          desktop-load-locked-desktop nil
+          desktop-auto-save-timeout   30)
+
+	(add-hook 'kill-emacs-hook 'desktop-save-in-desktop-dir) ; 在退出 Emacs 时保存会话状态
+
+	:hook
+	(emacs-startup . desktop-save-mode) ; 在 Emacs 启动时启用 desktop-save-mode
+	))
+
+(use-package ansi-color
+  :config
+  (defun display-ansi-color ()
+	(interactive)
+	(ansi-color-apply-on-region (point-min) (point-max))))
 
 (provide 'init-features)
