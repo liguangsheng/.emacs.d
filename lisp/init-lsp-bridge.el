@@ -6,34 +6,46 @@
 	      :files (:defaults "*"))
 
   :init
-  (setq lsp-bridge-enable-log t)
-
   (defun my/lsp-bridge-find-def ()
     (interactive)
     (let ((prev-marker (point-marker)))
       (lsp-bridge-find-def)
       (xref-push-marker-stack prev-marker)))
 
-  ;; 通过Cape融合不同的补全后端，比如lsp-bridge、 tabnine、 file、 dabbrev.
-  ;; (defun lsp-bridge-mix-multi-backends ()
-  ;;   (setq-local completion-category-defaults nil)
-  ;;   (setq-local completion-at-point-functions
-  ;; 		(list
-  ;; 		 (cape-capf-buster
-  ;;                 (cape-super-capf
-  ;;                  #'lsp-bridge-capf
-  ;;                  #'cape-keyword
-  ;;                  #'cape-file
-  ;;                  #'cape-dabbrev
-  ;;                  )
-  ;;                 'equal)
-  ;; 		 )))
+  (defun lsp-bridge-mode-hook-func ()
+    (with-eval-after-load 'corfu (corfu-mode -1))
 
-  ;; Enable auto completion in elisp mode.
-  ;; (add-hooks 'emacs-lisp-mode-hook
-  ;; 	     (lambda () (setq-local corfu-auto t)))
+    (my-leader-def :keymaps 'local
+      "="   'lsp-bridge-code-format
+      "c i" 'lsp-bridge-find-impl
+      "c R" 'lsp-bridge-rename
+      "c a" 'lsp-bridge-code-action
+      )
 
-  (require 'lsp-bridge)             ;; load lsp-bridge
+    (local-set-key (kbd "M-[")                                #'lsp-bridge-return-from-def)
+    (local-set-key (kbd "M-]")                                #'lsp-bridge-find-def)
+    (local-set-key [remap xref-find-definitions]              #'lsp-bridge-find-def)
+    (local-set-key [remap xref-find-definitions-other-window] #'lsp-bridge-find-def-other-window)
+    (local-set-key [remap xref-find-references]               #'lsp-bridge-find-references)
+
+    (evil-define-key 'normal 'local (kbd "gd")  #'lsp-bridge-find-def)
+    (evil-define-key 'normal 'local (kbd "gD")  #'lsp-bridge-find-def-other-window)
+    (evil-define-key 'normal 'local (kbd "gi")  #'lsp-bridge-find-impl)
+    (evil-define-key 'normal 'local (kbd "gI")  #'lsp-bridge-find-impl-other-window)
+    (evil-define-key 'normal 'local (kbd "gr")  #'lsp-bridge-find-references)
+    (evil-define-key 'normal 'local (kbd "K")   #'lsp-bridge-popup-documentation)
+    (evil-define-key 'normal 'local (kbd "[d")  #'lsp-bridge-diagnostic-jump-prev)
+    (evil-define-key 'normal 'local (kbd "]d")  #'lsp-bridge-diagnostic-jump-next)
+    )
+
+  (setq lsp-bridge-enable-log   nil
+	acm-enable-icon         t
+	acm-enable-doc          t
+	acm-enable-tabnine      nil
+	acm-enable-quick-access t)
+  (require 'lsp-bridge)
+  (evil-set-initial-state 'lsp-bridge-ref-mode 'insert)
+  (add-hook 'lsp-bridge-mode-hook #'lsp-bridge-mode-hook-func)
 
   ;; Enable lsp-bridge.
   (add-hooks (list
@@ -46,21 +58,10 @@
 	      'haskell-mode-hook
 	      'js2-mode-hook
 	      'js-mode-hook
-	      'sh-mode-hook
-	      'web-mode-hook
+	      'lua-mode-hook
 	      )
-	     (lambda ()
-	       (with-eval-after-load 'corfu (corfu-mode -1))
-	       (lsp-bridge-mode 1)
-	       (my-leader-def :keymaps 'local
-		 "c i" 'lsp-bridge-find-impl
-		 "c R" 'lsp-bridge-rename
-		 )
-	       (local-set-key [remap xref-find-definitions] #'my/lsp-bridge-find-def)
-	       (local-set-key [remap xref-find-definitions-other-window] #'lsp-bridge-find-def-other-window)
-	       (local-set-key [remap xref-find-references]  #'lsp-bridge-find-references)))
-
-  (evil-set-initial-state 'lsp-bridge-ref-mode 'insert)
+	     #'lsp-bridge-mode
+	     )
   )
 
 (provide 'init-lsp-bridge)

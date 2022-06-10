@@ -3,7 +3,7 @@
 ;;; Code:
 
 (require 'package)
-(setq package-user-dir (expand-file-name ".local/elpa" user-emacs-directory))
+(setq package-user-dir (expand-file-name "var/elpa" user-emacs-directory))
 (setq package-check-signature nil)
 ;; (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
 ;;                          ("melpa" . "https://melpa.org/packages/")))
@@ -57,3 +57,4 @@ locate PACKAGE."
 
 (provide 'init-elpa)
 ;;; init-elpa.el ends here
+

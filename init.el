@@ -9,64 +9,66 @@
 
 ;;; Code:
 
-(require 'init-startup (expand-file-name "lisp/init-startup.el" user-emacs-directory))
+;; Speed up startup
+
+;; Add dir to load-path
+(dolist (dir '("site-lisp" "lisp"))
+  (push (expand-file-name dir user-emacs-directory) load-path))
+
+;; Recursive add site-lisp to load-path
+(let ((default-directory (expand-file-name "site-lisp" user-emacs-directory)))
+  (normal-top-level-add-subdirs-to-load-path))
+
+(defvar native-comp-deferred-compilation-deny-list nil)
+
+(require 'init-elpa)
+(require 'init-straight)
+(require 'init-basic)
 
 ;;; Quick Settings:
 
 (setq-default
- preferences/dark-theme   (if *gui* 'doom-vibrant nil)
- preferences/light-theme  (if *gui* 'doom-one-light nil)
- preferences/font   "JetBrainsMonoMedium Nerd Font:pixelsize=12:weight=medium"
- preferences/cnfont (font-spec :family "AR PL UKai CN" :size 14)
- preferences/python-executable (cond (*windows* "C:\\Program Files\\Python39\\python.exe")
-				     (t         "python3"))
- preferences/enable-server (not *windows*)
- line-spacing 0.3
+ my-gui-theme            'doom-opera-light
+ my-tui-theme            'doom-opera-light
+ my-enfont               "MapleMono NF CN:pixelsize=12:weight=medium"
+ my-cnfont               "LXGW WenKai Mono:pixelsize=14"
+ my-enable-server        t
+ my-auto-restore-session nil
+ line-spacing            0.2
  )
 
 ;; core
-;; (require 'init-elpa)
-(require 'init-straight)
-(require 'init-basic)
-(require 'init-fonts)
 (require 'init-theme)
+(require 'init-evil)
 (require 'init-keys)
-(require 'init-projectile)
+(require 'init-buffer)
+(require 'init-window)
+(require 'init-fonts)
 
-;; languages & major-modes
+;; features
+(require 'init-features)
+(require 'init-search)
+(require 'init-editconfig)
+(require 'init-avy)
+(require 'init-project)
+(require 'init-flycheck)
+(require 'init-dired)
+(require 'init-vcs)
+(require 'init-treemacs)
+;; (require 'init-copilot)
+(require 'init-completion)
+(require 'init-lsp)
+(require 'init-tags)
+;; (require 'init-lsp-bridge)
+
+;; programing languages
+(require 'init-prog)
 (require 'init-go)
 (require 'init-python)
 (require 'init-rust)
 (require 'init-org)
 (require 'init-markdown)
-(require 'init-langs)
 
-;; editing
-(require 'init-evil)
-(require 'init-search)
-(require 'init-editconfig)
+;; exp
 
-;; tools
-(require 'init-features)
-(require 'init-posframe)
-(require 'init-icons)
-(require 'init-tabline)
-(require 'init-tags)
-(require 'init-completion)
-;; (require 'init-company)
-;; (require 'init-lsp)
-(require 'init-corfu)
-(require 'init-lsp-bridge)
-(require 'init-flycheck)
-(require 'init-dired)
-(require 'init-vcs)
-(require 'init-hydra)
-(require 'init-treemacs)
-(require 'init-tree-sitter)
-
-;;; Experimental:
-
-;;; Load custom file:
-(when (and custom-file (file-readable-p custom-file) (load custom-file)))
-
-;;; init.el ends here
+(;;; Init.el ends here
