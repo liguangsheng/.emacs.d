@@ -1,10 +1,6 @@
-;;; init-straight.el --- 
-;;; Commentary:
-;;; Code:
-
 (defvar bootstrap-version)
-(setq straight-base-dir (expand-user-var""))
-(let ((bootstrap-file    (expand-user-var "straight/repos/straight.el/bootstrap.el"))
+(setq straight-base-dir (expand-file-name "var/" user-emacs-directory))
+(let ((bootstrap-file (expand-file-name "var/straight/repos/straight.el/bootstrap.el" user-emacs-directory))
       (bootstrap-version 5))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
@@ -31,4 +27,3 @@
 (use-package bind-key)
 
 (provide 'init-straight)
-;;; init-straight.el ends here
