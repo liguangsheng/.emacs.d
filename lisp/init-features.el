@@ -129,7 +129,13 @@
 (use-package ansi-color
   :config
   (defun display-ansi-color ()
-	(interactive)
-	(ansi-color-apply-on-region (point-min) (point-max))))
+    (interactive)
+    (ansi-color-apply-on-region (point-min) (point-max)))
+
+  (add-hook 'find-file-hook
+            (lambda ()
+              (when (and buffer-file-name
+                         (string-match-p "\\.log\\'" buffer-file-name))
+                (display-ansi-color)))))
 
 (provide 'init-features)
