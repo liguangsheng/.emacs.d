@@ -1,9 +1,17 @@
+;;; init-tags.el --- Ctags and tags navigation -*- lexical-binding: t; ---
+
+;;; Commentary:
+;; This file configures Citre for enhanced tags-based code navigation
+;; and completion using ctags and GNU Global.
+
+;;; Code:
+
 (use-package citre
   :init
   ;; This is needed in `:init' block for lazy load to work.
   (require 'citre-config)
-  ;; Bind your frequently used commands.  Alternatively, you can define them
-  ;; in `citre-mode-map' so you can only use them when `citre-mode' is enabled.
+
+  ;; Bind frequently used commands
   (global-set-key (kbd "C-x c j") 'citre-jump)
   (global-set-key (kbd "C-x c J") 'citre-jump-back)
   (global-set-key (kbd "C-x c p") 'citre-ace-peek)
@@ -14,8 +22,7 @@
     "c c d" '(citre-jump      :wk "Jump by tags")
     "c c J" '(citre-jump-back :wk "Jump back")
     "c c p" 'citre-ace-peek
-    "c c u" 'citre-update-this-tags-file
-    )
+    "c c u" 'citre-update-this-tags-file)
 
   (setq
    ;; Set these if readtags/ctags is not in your path.
@@ -33,31 +40,28 @@
    ;; `citre-mode' is automatically enabled.  If you only want this to work for
    ;; certain modes (like `prog-mode'), set it like this.
    citre-auto-enable-citre-mode-modes '(graphql-mode
-										protobuf-mode)
-   citre-enable-capf-integration nil
-   )
+                                         protobuf-mode)
+   citre-enable-capf-integration nil)
 
   (defun citre-mix-multi-backends ()
+    "Mix multiple completion backends for citre."
     (setq-local completion-category-defaults nil)
     (setq-local completion-at-point-functions
-				(list
-				 (cape-capf-buster
+                (list
+                 (cape-capf-buster
                   (cape-capf-super
-				   ;; #'tabnine-completion-at-point
+                   ;; #'tabnine-completion-at-point
                    #'citre-completion-at-point
-				   #'cape-keyword
-				   #'cape-abbrev
+                   #'cape-keyword
+                   #'cape-abbrev
                    #'cape-file
-                   #'cape-dabbrev
-                   )
-                  'equal)
-				 ))
+                   #'cape-dabbrev)
+                  'equal)))
 
+    (define-key citre-mode-map [remap xref-find-definitions] #'citre-jump))
 
-    (define-key citre-mode-map [remap xref-find-definitions] #'citre-jump)
-    )
-
-  (add-hook 'citre-mode-hook #'citre-mix-multi-backends)
-  )
+  (add-hook 'citre-mode-hook #'citre-mix-multi-backends))
 
 (provide 'init-tags)
+
+;;; init-tags.el ends here

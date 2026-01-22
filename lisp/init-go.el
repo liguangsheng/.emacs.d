@@ -1,66 +1,74 @@
+;;; init-go.el --- Go language configuration -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; This file configures Go development environment including go-mode,
+;; LSP support, testing tools, and various Go-related utilities.
+
+;;; Code:
+
+;; Go mode configuration
 (use-package go-mode
   :mode "\\.go\\'"
   :hook ((go-mode . my-go-mode-hook))
   :bind (:map go-mode-map
-			  ("C-c d d" . godef-describe)
-			  ("C-c d p" . godoc-at-point)
-			  ("C-c r u" . go-remove-unused-imports)
-			  ("C-M-l" . gofmt))
+              ("C-c d d" . godef-describe)
+              ("C-c d p" . godoc-at-point)
+              ("C-c r u" . go-remove-unused-imports)
+              ("C-M-l" . gofmt))
   :init
-  ;; Copy system environment variables
+  ;; Copy system environment variables on macOS
   (when (memq window-system '(mac ns))
     (dolist (var '("GOPATH" "GO15VENDOREXPERIMENT"))
       (unless (getenv var)
-		(exec-path-from-shell-copy-env var))))
+        (exec-path-from-shell-copy-env var))))
 
-  (defun my-go-mode-hook()
-	(message "execute go-mode-hook")
+  (defun my-go-mode-hook ()
+    "Hook to run when entering go-mode."
+    (message "execute go-mode-hook")
     (subword-mode 1)
     (setq-local tab-width 4)
     (with-eval-after-load 'format-all
-      (setq  format-all-formatters '(("Go" goimports))))
+      (setq format-all-formatters '(("Go" goimports))))
 
-	(setq lsp-go-env '((GOFLAGS . "-tags=wireinject")))
+    (setq lsp-go-env '((GOFLAGS . "-tags=wireinject")))
 
-	(lsp-deferred)
-	(my-leader-def :keymaps 'local
-	  "=" (lambda () (interactive) (format-all-buffer))
-      )
-	)
-  )
+    (lsp-deferred)
+    (my-leader-def :keymaps 'local
+      "=" (lambda () (interactive) (format-all-buffer)))))
 
+;; Go struct tags
 (use-package go-tag
   :bind (:map go-mode-map
-			  ("C-c t" . go-tag-add)
-			  ("C-c T" . go-tag-remove))
+              ("C-c t" . go-tag-add)
+              ("C-c T" . go-tag-remove))
   :custom
   (go-tag-args '("-transform" "camelcase")))
 
+;; Go testing
 (use-package gotest
   :commands (go-test-current-project
-			 go-test-current-file
-			 go-test-current-test
-			 go-test-current-benchmark
-			 go-run)
+             go-test-current-file
+             go-test-current-test
+             go-test-current-benchmark
+             go-run)
   :bind (:map go-mode-map
-			  ("C-x p" . go-test-current-project)
-			  ("C-x f" . go-test-current-file)
-			  ("C-x t" . go-test-current-test)
-			  ("C-x b" . go-test-current-benchmark)
-			  ("C-x x" . go-run))
+              ("C-x p" . go-test-current-project)
+              ("C-x f" . go-test-current-file)
+              ("C-x t" . go-test-current-test)
+              ("C-x b" . go-test-current-benchmark)
+              ("C-x x" . go-run))
   :init
   (add-hook 'go-mode-hook
-			(lambda ()
-			  (my-local-leader-def :keymaps 'local
-				"t t" #'go-test-current-test
-				"t b" #'go-test-current-benchmark
-				"t f" #'go-test-current-file
-				"t p" #'go-test-current-project
-				"t r" #'go-run)
-			  (setq-local go-test-args "-v -count=1")
-			  ))
-  )
+            (lambda ()
+              (my-local-leader-def :keymaps 'local
+                "t t" #'go-test-current-test
+                "t b" #'go-test-current-benchmark
+                "t f" #'go-test-current-file
+                "t p" #'go-test-current-project
+                "t r" #'go-run)
+              (setq-local go-test-args "-v -count=1"))))
 
+;; Additional Go packages
 (use-package go-dlv)
 (use-package go-impl)
 (use-package go-playground
@@ -69,9 +77,9 @@
 (use-package go-snippets)
 (use-package golint)
 
+;; Utility function for pasting stacktraces
 (defun paste-stacktrace ()
-  "Paste text from the clipboard, replacing \\n with \n and \\t with \t.
-Then insert the processed text at the current point."
+  "Paste text from clipboard, replacing \\n with \n and \\t with \t."
   (interactive)
   (let* ((clipboard-text (gui-get-primary-selection))
          (processed-text
@@ -82,5 +90,6 @@ Then insert the processed text at the current point."
             clipboard-text))))
     (insert processed-text)))
 
-
 (provide 'init-go)
+
+;;; init-go.el ends here

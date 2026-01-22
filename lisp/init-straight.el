@@ -1,3 +1,11 @@
+;;; init-straight.el --- Straight.el package manager -*- lexical-binding: t; ---
+
+;;; Commentary:
+;; This file bootstraps Straight.el package manager and configures
+;; use-package integration for dependency management.
+
+;;; Code:
+
 (defvar bootstrap-version)
 (setq straight-base-dir (expand-file-name "var/" user-emacs-directory))
 (let ((bootstrap-file (expand-file-name "var/straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -11,19 +19,20 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;; init `use-package'
-;; Should set before loading `use-package'
+;; Configure use-package settings before loading
 (eval-and-compile
   (setq straight-use-package-by-default t)
-  ;;  (setq use-package-always-ensure t)
+  ;; (setq use-package-always-ensure t)
   (setq use-package-always-defer t)
   (setq use-package-expand-minimally t)
   (setq use-package-enable-imenu-support t))
 
 (straight-use-package 'use-package)
 
-;; Required by `use-package'
+;; Required packages for use-package
 (use-package diminish)
 (use-package bind-key)
 
 (provide 'init-straight)
+
+;;; init-straight.el ends here

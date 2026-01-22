@@ -1,5 +1,8 @@
-;;; init-elpa.el --
+;;; init-elpa.el --- ELPA package management -*- lexical-binding: t; ---
+
 ;;; Commentary:
+;; This file configures Emacs package management with ELPA and MELPA.
+
 ;;; Code:
 
 (require 'package)

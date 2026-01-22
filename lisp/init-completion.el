@@ -1,15 +1,24 @@
+;;; init-completion.el --- Completion framework configuration -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; This file configures the completion framework including Vertico, Corfu,
+;; Consult, and related packages for enhanced minibuffer and in-buffer completion.
+
+;;; Code:
+
+;; Vertico for vertical completion UI
 (use-package vertico
   :straight
   '(vertico
     :files (:defaults "extensions/*")
     :includes (vertico-buffer
-			   vertico-directory
-			   vertico-flat
-			   vertico-indexed
-			   vertico-mouse
-			   vertico-quick
-			   vertico-repeat
-			   vertico-reverse))
+               vertico-directory
+               vertico-flat
+               vertico-indexed
+               vertico-mouse
+               vertico-quick
+               vertico-repeat
+               vertico-reverse))
   :init
   (setq vertico-count 20)
   (vertico-mode)
@@ -17,57 +26,59 @@
   (define-key vertico-map "?" #'minibuffer-completion-help)
   (define-key vertico-map (kbd "M-TAB") #'minibuffer-complete)
 
-  (setq completion-styles '(substring orderless))
-  )
+  (setq completion-styles '(substring orderless)))
 
+;; Vertico directory extension for file navigation
 (use-package vertico-directory
   :bind (:map vertico-map
-			  ("RET" . vertico-directory-enter)
-			  ("DEL" . vertico-directory-delete-char)
-			  ("M-DEL" . vertico-directory-delete-word))
+              ("RET" . vertico-directory-enter)
+              ("DEL" . vertico-directory-delete-char)
+              ("M-DEL" . vertico-directory-delete-word))
   ;; Tidy shadowed file names
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
+;; Enable indexed mode for number selection
 (use-package vertico-indexed
   :init (vertico-indexed-mode))
 
+;; Mouse support for vertico
 (use-package vertico-mouse
   :init (vertico-mouse-mode))
 
+;; Repeat last vertico session
 (use-package vertico-repeat
   :init
   (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
-  (global-set-key "\M-r" #'vertico-repeat)
-  )
+  (global-set-key "\M-r" #'vertico-repeat))
 
+;; Marginalia for completion annotations
 (use-package marginalia
   :bind (("M-A" . marginalia-cycle)
-		 :map minibuffer-local-map
-		 ("M-b" . marginalia-cycle))
+         :map minibuffer-local-map
+         ("M-b" . marginalia-cycle))
   :init
   (marginalia-mode))
 
+;; Embark for contextual actions
 (use-package embark
   :ensure t
-
   :bind
   (("C-." . embark-act)         ;; pick some comfortable binding
    ("M-." . embark-dwim)        ;; good alternative: M-.
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
   :init
-
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
 
   :config
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
-			   '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-				 nil
-				 (window-parameters (mode-line-format . none)))))
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
 
-;; Consult users will also want the embark-consult package.
+;; Embark-consult integration
 (use-package embark-consult
   :ensure t
   :after (embark consult)
@@ -77,15 +88,17 @@
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
+;; Orderless completion style
 (use-package orderless
   :init
   ;; Configure a custom style dispatcher (see the Consult wiki)
   ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
   ;;       orderless-component-separator #'orderless-escapable-split-on-space)
   (setq completion-styles '(orderless)
-		completion-category-defaults nil
-		completion-category-overrides '((file (styles partial-completion)))))
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
 
+;; Consult for enhanced search and navigation
 (use-package consult
   :bind
   ([remap switch-to-buffer]         . consult-buffer)
@@ -96,18 +109,20 @@
   :hook (completion-list-mode . consult-preview-at-point-mode)
 
   :init
-  (setq  consult-narrow-key "<"
-		 consult-line-numbers-widen t
-		 consult-async-min-input 2
-		 consult-async-refresh-delay  0.15
-		 consult-async-input-throttle 0.2
-		 consult-async-input-debounce 0.1)
+  (setq consult-narrow-key "<"
+        consult-line-numbers-widen t
+        consult-async-min-input 2
+        consult-async-refresh-delay 0.15
+        consult-async-input-throttle 0.2
+        consult-async-input-debounce 0.1)
 
   (setq xref-show-xrefs-function #'consult-xref
-		xref-show-definitions-function #'consult-xref))
+        xref-show-definitions-function #'consult-xref))
 
+;; SVG library for icons
 (use-package svg-lib)
 
+;; Kind icons for Corfu
 (use-package kind-icon
   :ensure t
   :after corfu
@@ -116,13 +131,14 @@
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
+;; Corfu for in-buffer completion
 (use-package corfu
   :straight '(corfu
-			  :files (:defaults "extensions/*")
-			  :includes (corfu-history
-						 corfu-info
-						 corfu-indexed
-						 corfu-quick))
+              :files (:defaults "extensions/*")
+              :includes (corfu-history
+                         corfu-info
+                         corfu-indexed
+                         corfu-quick))
   ;; Optional customizations
   :custom
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
@@ -154,10 +170,9 @@
   (corfu-indexed-mode)
 
   :general
-  (:states 'insert :keymaps 'corfu-map)
-  )
+  (:states 'insert :keymaps 'corfu-map))
 
-;; A few more useful configurations...
+;; Additional completion configurations
 (use-package emacs
   :init
   ;; TAB cycle if there are only few candidates
@@ -172,6 +187,7 @@
   ;; `completion-at-point' is often bound to M-TAB.
   (setq tab-always-indent 'complete))
 
+;; Corfu documentation popup
 (use-package corfu-doc
   :if *gui*
   :init
@@ -179,10 +195,9 @@
   :config
   (define-key corfu-map (kbd "M-p") #'corfu-doc-scroll-down) ;; corfu-next
   (define-key corfu-map (kbd "M-n") #'corfu-doc-scroll-up)  ;; corfu-previous
-  (define-key corfu-map (kbd "M-d") #'corfu-doc-toggle)
-  )
+  (define-key corfu-map (kbd "M-d") #'corfu-doc-toggle))
 
-;; Add extensions
+;; Cape completion extensions
 (use-package cape
   ;; Bind dedicated completion commands
   ;; Alternative prefix keys: C-c p, M-p, M-+, ...
@@ -219,14 +234,14 @@
   ;; (add-to-list 'completion-at-point-functions #'cape-symbol)
   )
 
-;; citre或者lsp-bridge中引用了tabnine的capf
+;; TabNine CAPF integration (commented out)
 ;; (use-package tabnine-capf
 ;;   :straight (:host github :repo "50ways2sayhard/tabnine-capf" :files ("*.el" "*.sh"))
 ;;   :init
 ;;   (require 'tabnine-capf)
-
 ;;   :config
-;;   (add-hook 'kill-emacs-hook #'tabnine-capf-kill-process)
-;;   )
+;;   (add-hook 'kill-emacs-hook #'tabnine-capf-kill-process))
 
 (provide 'init-completion)
+
+;;; init-completion.el ends here

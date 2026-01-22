@@ -1,62 +1,41 @@
+;;; init-dired.el --- Dired and file manager configuration -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; This file configures Dired and related file management packages
+;; including Dirvish for enhanced directory browsing.
+
+;;; Code:
+
+;; Use gls if available (GNU ls for macOS)
 (when (executable-find "gls")
   (setq insert-directory-program "gls"))
 
+;; Basic Dired configuration
 (use-package dired
   :straight nil
   :custom
   (dired-recursive-deletes 'always)
-  (dired-recursive-copies  'always)
+  (dired-recursive-copies 'always)
   (dired-kill-when-opening-new-dired-buffer t)
   (dired-dwim-target t)
 
   :general
   (my-leader-def "fd" 'dired)
   (:states 'normal :keymaps 'dired-mode-map
-		   "SPC" nil))
+           "SPC" nil))
 
-;; (use-package all-the-icons-dired
-;;   :hook (dired-mode . all-the-icons-dired-mode))
-
-;; Quick sort dired buffers via hydra
-;; (use-package dired-quick-sort
-;;   :general
-;;   (:states 'normal :keymaps 'dired-mode-map
-;; 		   "S" 'hydra-dired-quick-sort/body))
-
-;; Show git info in dired
-;; (use-package dired-git-info
-;;   :general
-;;   (:states 'normal :keymaps 'dired-mode-map
-;; 		   ")" 'dired-git-info-mode))
-
-;; Colorful dired
-;; (use-package diredfl
-;;   :hook (dired-mode . diredfl-mode))
-
-;; (use-package dired-subtree
-;;   :general
-;;   (:states 'normal :keymaps 'dired-mode-map
-;; 		   "TAB" 'dired-subtree-cycle))
-
-;; (use-package fd-dired)
-
-;; (use-package dired-k
-;;   :general
-;;   (:states 'normal :keymaps 'dired-mode-map
-;; 		   "K" 'dired-k))
-
+;; Dirvish - Modern file manager
 (use-package dirvish
   :init
   (dirvish-override-dired-mode)
   :custom
-  (dirvish-quick-access-entries ; It's a custom option, `setq' won't work
+  (dirvish-quick-access-entries
    '(("h" "~/"                          "Home")
      ("d" "~/Downloads/"                "Downloads")
      ("m" "/mnt/"                       "Drives")
      ("t" "~/.local/share/Trash/files/" "TrashCan")))
   :config
-  ;; (dirvish-peek-mode) ; Preview files in minibuffer
-  (dirvish-side-follow-mode) ; similar to `treemacs-follow-mode'
+  (dirvish-side-follow-mode)
   (setq dirvish-mode-line-format
         '(:left (sort symlink) :right (omit yank index)))
   (setq dirvish-attributes
@@ -66,72 +45,74 @@
         "-l --almost-all --human-readable --group-directories-first --no-group")
 
   (add-hook 'dirvish-find-entry-hook
-			(lambda (&rest _) (setq-local truncate-lines t)))
+            (lambda (&rest _) (setq-local truncate-lines t)))
 
+  ;; Exa preview support
   (when (executable-find "exa")
-	(dirvish-define-preview exa (file)
-	  "Use `exa' to generate directory preview."
-	  :require ("exa") ; tell Dirvish to check if we have the executable
-	  (when (file-directory-p file) ; we only interest in directories here
-		`(shell . ("exa" "-al" "--color=always" "--icons"
-				   "--group-directories-first" ,file))))
+    (dirvish-define-preview exa (file)
+      "Use `exa' to generate directory preview."
+      :require ("exa")
+      (when (file-directory-p file)
+        `(shell . ("exa" "-al" "--color=always" "--icons"
+                   "--group-directories-first" ,file))))
 
-	(add-to-list 'dirvish-preview-dispatchers 'exa)
-	)
+    (add-to-list 'dirvish-preview-dispatchers 'exa))
 
-  :bind ; Bind `dirvish|dirvish-side|dirvish-dwim' as you see fit
+  :bind
   (("C-c f" . dirvish-fd))
 
   :general
-  (:states 'normal :keymaps 'dirvish-mode-map ; Dirvish inherits `dired-mode-map'
-		   "?"    #'dirvish-dispatch
-		   "q"    #'dirvish-quit
-		   "a"    #'dirvish-quick-access
-		   "f"    #'dirvish-file-info-menu
-		   "y"    #'dirvish-yank-menu
-		   "N"    #'dirvish-narrow
-		   "^"    #'dirvish-history-last
-		   "h"    #'dirvish-history-jump ; remapped `describe-mode'
-		   "s"    #'dirvish-quicksort    ; remapped `dired-sort-toggle-or-edit'
-		   "v"    #'dirvish-vc-menu      ; remapped `dired-view-file'
-		   "TAB"  #'dirvish-subtree-toggle
-		   "M-f"  #'dirvish-history-go-forward
-		   "M-b"  #'dirvish-history-go-backward
-		   "M-l"  #'dirvish-ls-switches-menu
-		   "M-m"  #'dirvish-mark-menu
-		   "M-t"  #'dirvish-layout-toggle
-		   "M-s"  #'dirvish-setup-menu
-		   "M-e"  #'dirvish-emerge-menu
-		   "M-j"  #'dirvish-fd-jump
-		   "<mouse-1>" #'dirvish-subtree-toggle))
+  (:states 'normal :keymaps 'dirvish-mode-map
+           "?"    #'dirvish-dispatch
+           "q"    #'dirvish-quit
+           "a"    #'dirvish-quick-access
+           "f"    #'dirvish-file-info-menu
+           "y"    #'dirvish-yank-menu
+           "N"    #'dirvish-narrow
+           "^"    #'dirvish-history-last
+           "h"    #'dirvish-history-jump
+           "s"    #'dirvish-quicksort
+           "v"    #'dirvish-vc-menu
+           "TAB"  #'dirvish-subtree-toggle
+           "M-f"  #'dirvish-history-go-forward
+           "M-b"  #'dirvish-history-go-backward
+           "M-l"  #'dirvish-ls-switches-menu
+           "M-m"  #'dirvish-mark-menu
+           "M-t"  #'dirvish-layout-toggle
+           "M-s"  #'dirvish-setup-menu
+           "M-e"  #'dirvish-emerge-menu
+           "M-j"  #'dirvish-fd-jump
+           "<mouse-1>" #'dirvish-subtree-toggle))
 
+;; Dired extensions
 (use-package dired-x
   :straight nil
   :config
-  ;; Make dired-omit-mode hide all "dotfiles"
+  ;; Hide dotfiles by default
   (setq dired-omit-files
         (concat dired-omit-files "\\|^\\..*$")))
 
-;; Addtional syntax highlighting for dired
+;; Syntax highlighting for Dired
 (use-package diredfl
   :hook
   ((dired-mode . diredfl-mode)
-   ;; highlight parent and directory preview as well
    (dirvish-directory-view-mode . diredfl-mode))
   :config
   (set-face-attribute 'diredfl-dir-name nil :bold t))
 
+;; VSCode-style icons
 (use-package vscode-icon
   :config
   (push '("jpg" . "image") vscode-icon-file-alist))
 
+;; Side panel for Dirvish
 (use-package dirvish-side
   :straight nil
   :custom
   (dirvish-side-width 42)
-
   :general
-  (my-leader-def "fs" #'dirvish-side)
-  )
+  (my-leader-def "fs" #'dirvish-side))
 
 (provide 'init-dired)
+
+;;; init-dired.el ends here
